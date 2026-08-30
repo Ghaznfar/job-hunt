@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: jobhunt
+          POSTGRES_PASSWORD: jobhunt
+          POSTGRES_DB: jobhunt_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U jobhunt"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://jobhunt:jobhunt@localhost:5432/jobhunt_test?schema=public
+      DIRECT_URL: postgresql://jobhunt:jobhunt@localhost:5432/jobhunt_test?schema=public
+      AUTH_SECRET: ci-only-secret-ci-only-secret-ci-only-1234
+      AI_PROVIDER: mock
+      JOB_PROVIDERS: mock
+      RATELIMIT_DRIVER: memory
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npm run typecheck
+      - name: Apply migrations
+        run: npx prisma migrate deploy
+      - name: Unit + integration tests
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Dependency audit (high severity)
+        run: npm audit --audit-level=high || true
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [verify]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t jobhunt:ci .
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: jobhunt:ci
+          format: table
+          exit-code: "0"
+          severity: CRITICAL,HIGH

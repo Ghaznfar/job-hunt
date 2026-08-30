@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jobhunt
+      POSTGRES_PASSWORD: jobhunt
+      POSTGRES_DB: jobhunt
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobhunt"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      DATABASE_URL: postgresql://jobhunt:jobhunt@db:5432/jobhunt?schema=public
+      DIRECT_URL: postgresql://jobhunt:jobhunt@db:5432/jobhunt?schema=public
+      AUTH_SECRET: ${AUTH_SECRET:?set AUTH_SECRET in your environment}
+      AUTH_URL: ${APP_URL:-http://localhost:3000}
+      AUTH_TRUST_HOST: "true"
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      JOB_PROVIDERS: ${JOB_PROVIDERS:-mock}
+      ADZUNA_APP_ID: ${ADZUNA_APP_ID:-}
+      ADZUNA_APP_KEY: ${ADZUNA_APP_KEY:-}
+      CRON_SECRET: ${CRON_SECRET:-change-me}
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      RATELIMIT_DRIVER: ${RATELIMIT_DRIVER:-postgres}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      STRIPE_PRO_PRICE_ID: ${STRIPE_PRO_PRICE_ID:-}
+      EMAIL_DRIVER: ${EMAIL_DRIVER:-console}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    ports:
+      - "3000:3000"
+    # Run migrations then start the server.
+    command: sh -c "npx prisma migrate deploy && node server.js"
+
+volumes:
+  db_data:
