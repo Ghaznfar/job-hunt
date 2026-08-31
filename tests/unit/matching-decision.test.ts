@@ -53,7 +53,12 @@ describe("decideVerdict — DONT_APPLY hard blockers", () => {
       needsSponsorship: true,
       workAuthorizations: { US: "NEEDS_SPONSORSHIP" },
     };
-    const j: JobInput = { ...goodJob, country: "US", salaryCurrency: "USD", sponsorshipAvailable: "NO" };
+    const j: JobInput = {
+      ...goodJob,
+      country: "US",
+      salaryCurrency: "USD",
+      sponsorshipAvailable: "NO",
+    };
     const d = decideVerdict(computeMatch(c, j));
     expect(d.verdict).toBe("DONT_APPLY");
     expect(d.concerns.join(" ")).toMatch(/sponsor/i);
@@ -74,8 +79,17 @@ describe("decideVerdict — DONT_APPLY hard blockers", () => {
   });
 
   it("blocks when severely under-experienced", () => {
-    const c: CandidateInput = { ...strongCandidate, yearsExperience: 1, currentTitle: "Junior Engineer" };
-    const j: JobInput = { ...goodJob, minYearsRequired: 8, maxYearsRequired: 12, seniorityLevel: "staff" };
+    const c: CandidateInput = {
+      ...strongCandidate,
+      yearsExperience: 1,
+      currentTitle: "Junior Engineer",
+    };
+    const j: JobInput = {
+      ...goodJob,
+      minYearsRequired: 8,
+      maxYearsRequired: 12,
+      seniorityLevel: "staff",
+    };
     const d = decideVerdict(computeMatch(c, j));
     expect(d.verdict).toBe("DONT_APPLY");
   });
@@ -87,7 +101,12 @@ describe("decideVerdict — DONT_APPLY hard blockers", () => {
       targetCountries: ["GB"],
       workPreference: "REMOTE",
     };
-    const j: JobInput = { ...goodJob, country: "US", salaryCurrency: "USD", workArrangement: "ONSITE" };
+    const j: JobInput = {
+      ...goodJob,
+      country: "US",
+      salaryCurrency: "USD",
+      workArrangement: "ONSITE",
+    };
     const d = decideVerdict(computeMatch(c, j));
     expect(d.verdict).toBe("DONT_APPLY");
   });
@@ -115,7 +134,12 @@ describe("decideVerdict — MAYBE", () => {
 
   it("downgrades APPLY to MAYBE when eligibility is uncertain", () => {
     const c: CandidateInput = { ...strongCandidate, workAuthorizations: {}, country: "GB" };
-    const j: JobInput = { ...goodJob, country: "US", salaryCurrency: "USD", requiresWorkAuthorization: ["US"] };
+    const j: JobInput = {
+      ...goodJob,
+      country: "US",
+      salaryCurrency: "USD",
+      requiresWorkAuthorization: ["US"],
+    };
     const d = decideVerdict(computeMatch(c, j));
     expect(["MAYBE", "DONT_APPLY"]).toContain(d.verdict);
     expect(d.verdict).not.toBe("APPLY");
@@ -135,7 +159,12 @@ describe("decideVerdict — determinism", () => {
       skillSlugs: new Set(["php"]),
       yearsExperience: 0,
     };
-    const j: JobInput = { ...goodJob, minYearsRequired: 6, maxYearsRequired: 10, seniorityLevel: "senior" };
+    const j: JobInput = {
+      ...goodJob,
+      minYearsRequired: 6,
+      maxYearsRequired: 10,
+      seniorityLevel: "senior",
+    };
     const rule = computeMatch(c, j);
     const d = decideVerdict(rule);
     expect(rule.overall).toBeLessThan(55);

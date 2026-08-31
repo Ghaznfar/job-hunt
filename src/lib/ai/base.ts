@@ -69,7 +69,9 @@ export abstract class BaseAIProvider implements AIProvider {
     for (let attempt = 0; attempt < 2; attempt++) {
       const res = await this.complete(
         system,
-        attempt === 0 ? user : `${user}\n\nYour previous response was not valid JSON. Return ONLY the JSON object.`,
+        attempt === 0
+          ? user
+          : `${user}\n\nYour previous response was not valid JSON. Return ONLY the JSON object.`,
       );
       try {
         const parsed = schema.parse(extractJson(res.text));

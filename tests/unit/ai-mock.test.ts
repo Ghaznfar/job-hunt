@@ -65,7 +65,16 @@ describe("MockAIProvider.tailorResume never fabricates skills", () => {
         links: [],
         summary: "Engineer",
         experience: [
-          { company: "Acme", title: "Eng", location: "", startDate: "", endDate: "", current: true, bullets: ["Did work with Docker"], techs: ["Docker"] },
+          {
+            company: "Acme",
+            title: "Eng",
+            location: "",
+            startDate: "",
+            endDate: "",
+            current: true,
+            bullets: ["Did work with Docker"],
+            techs: ["Docker"],
+          },
         ],
         education: [],
         skills: ["Docker"],
@@ -73,7 +82,12 @@ describe("MockAIProvider.tailorResume never fabricates skills", () => {
         projects: [],
         languages: [],
       },
-      job: { title: "DevOps", company: "X", description: "Need AWS, Kubernetes, Docker", requirementsText: "" },
+      job: {
+        title: "DevOps",
+        company: "X",
+        description: "Need AWS, Kubernetes, Docker",
+        requirementsText: "",
+      },
       allowedSkills: ["Docker"],
     });
     // Job wants AWS + Kubernetes but the user does not have them — must not appear.

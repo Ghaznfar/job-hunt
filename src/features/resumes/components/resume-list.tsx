@@ -71,11 +71,11 @@ export function ResumeList({ resumes }: { resumes: ResumeRow[] }) {
           <Card key={r.id} className="group relative">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
                   <FileText className="size-5" />
                 </div>
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="rounded p-1 hover:bg-accent">
+                  <DropdownMenuTrigger className="hover:bg-accent rounded p-1">
                     <MoreVertical className="size-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -115,9 +115,9 @@ export function ResumeList({ resumes }: { resumes: ResumeRow[] }) {
 
               <Link href={`/dashboard/resumes/${r.id}`} className="mt-4 block">
                 <p className="font-medium">{r.name}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {r.fileType ?? "Manual"} · {r.versionCount} version{r.versionCount === 1 ? "" : "s"} ·
-                  updated {relativeDate(r.updatedAt)}
+                <p className="text-muted-foreground mt-1 text-xs">
+                  {r.fileType ?? "Manual"} · {r.versionCount} version
+                  {r.versionCount === 1 ? "" : "s"} · updated {relativeDate(r.updatedAt)}
                 </p>
               </Link>
 

@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { WORK_AUTH_STATUSES } from "./constants";
 
-const authStatus = z.enum(
-  WORK_AUTH_STATUSES.map((s) => s.value) as [string, ...string[]],
-);
+const authStatus = z.enum(WORK_AUTH_STATUSES.map((s) => s.value) as [string, ...string[]]);
 
 const optionalUrl = z
   .string()

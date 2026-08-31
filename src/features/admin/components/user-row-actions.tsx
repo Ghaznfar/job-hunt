@@ -29,7 +29,7 @@ export function UserRowActions({
 
   return (
     <div className="flex justify-end gap-1">
-      {pending ? <Loader2 className="size-4 animate-spin text-muted-foreground" /> : null}
+      {pending ? <Loader2 className="text-muted-foreground size-4 animate-spin" /> : null}
       <Button
         variant="ghost"
         size="sm"

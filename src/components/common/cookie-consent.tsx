@@ -29,11 +29,11 @@ export function CookieConsent() {
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 p-4 backdrop-blur">
+    <div className="bg-background/95 fixed inset-x-0 bottom-0 z-50 border-t p-4 backdrop-blur">
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-3 sm:flex-row sm:justify-between">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           We use strictly necessary cookies for sign-in and security only. See our{" "}
-          <Link href="/legal/cookies" className="underline hover:text-foreground">
+          <Link href="/legal/cookies" className="hover:text-foreground underline">
             Cookie Policy
           </Link>
           .

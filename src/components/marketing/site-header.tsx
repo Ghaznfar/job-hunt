@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
+    <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-8">
           <Logo />
@@ -20,7 +20,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
               >
                 {item.label}
               </Link>
@@ -35,11 +35,7 @@ export function SiteHeader() {
             <Link href="/signup">Start for free</Link>
           </Button>
         </div>
-        <button
-          className="md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
+        <button className="md:hidden" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
@@ -49,7 +45,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-md px-2 py-2 text-sm hover:bg-accent"
+              className="hover:bg-accent rounded-md px-2 py-2 text-sm"
               onClick={() => setOpen(false)}
             >
               {item.label}

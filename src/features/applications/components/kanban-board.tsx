@@ -14,19 +14,12 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
 import { STATUS_ORDER, STATUS_LABEL, STATUS_ACCENT } from "@/features/applications/constants";
 import { ApplicationCard, type BoardCard } from "./application-card";
 import { ApplicationDetailDialog } from "./application-detail-dialog";
-import {
-  moveApplicationAction,
-  reorderApplicationsAction,
-} from "@/features/applications/actions";
+import { moveApplicationAction, reorderApplicationsAction } from "@/features/applications/actions";
 import type { ApplicationStatus } from "@prisma/client";
 
 type BoardState = Record<ApplicationStatus, BoardCard[]>;
@@ -52,7 +45,7 @@ function Column({
       <div className="mb-2 flex items-center gap-2 px-1">
         <span className={cn("size-2 rounded-full", STATUS_ACCENT[status])} />
         <span className="text-sm font-medium">{STATUS_LABEL[status]}</span>
-        <span className="text-xs text-muted-foreground">{cards.length}</span>
+        <span className="text-muted-foreground text-xs">{cards.length}</span>
       </div>
       <div
         ref={setNodeRef}
@@ -67,7 +60,7 @@ function Column({
           ))}
         </SortableContext>
         {cards.length === 0 ? (
-          <p className="px-1 py-3 text-center text-xs text-muted-foreground">Drop here</p>
+          <p className="text-muted-foreground px-1 py-3 text-center text-xs">Drop here</p>
         ) : null}
       </div>
     </div>
@@ -90,7 +83,7 @@ export function KanbanBoard({ initial }: { initial: BoardState }) {
   }, [board]);
 
   const activeCard = activeId
-    ? board[locate.get(activeId) ?? "SAVED"]?.find((c) => c.id === activeId) ?? null
+    ? (board[locate.get(activeId) ?? "SAVED"]?.find((c) => c.id === activeId) ?? null)
     : null;
 
   function columnOf(overId: string): ApplicationStatus | null {
@@ -156,7 +149,9 @@ export function KanbanBoard({ initial }: { initial: BoardState }) {
             <Column key={status} status={status} cards={board[status] ?? []} onOpen={setOpenId} />
           ))}
         </div>
-        <DragOverlay>{activeCard ? <ApplicationCard card={activeCard} overlay /> : null}</DragOverlay>
+        <DragOverlay>
+          {activeCard ? <ApplicationCard card={activeCard} overlay /> : null}
+        </DragOverlay>
       </DndContext>
 
       {openId ? (

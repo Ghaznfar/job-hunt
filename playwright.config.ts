@@ -22,5 +22,13 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    env: {
+      AUTH_URL: baseURL,
+      AUTH_TRUST_HOST: "true",
+      APP_URL: baseURL,
+      AI_PROVIDER: "mock",
+      JOB_PROVIDERS: "mock",
+      RATELIMIT_DRIVER: "memory",
+    },
   },
 });

@@ -34,8 +34,14 @@ export async function changePasswordAction(input: FormData | unknown): Promise<A
 
     // If the user already has a password, require the current one.
     if (record?.hashedPassword) {
-      const okCurrent = await verifyPassword(parsed.data.currentPassword || "", record.hashedPassword);
-      if (!okCurrent) return fail("Your current password is incorrect.", { currentPassword: ["Incorrect password"] });
+      const okCurrent = await verifyPassword(
+        parsed.data.currentPassword || "",
+        record.hashedPassword,
+      );
+      if (!okCurrent)
+        return fail("Your current password is incorrect.", {
+          currentPassword: ["Incorrect password"],
+        });
     }
 
     await prisma.user.update({

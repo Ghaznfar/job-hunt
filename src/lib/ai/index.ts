@@ -95,7 +95,10 @@ function withLogging(provider: AIProvider, opts?: { userId?: string | null }): A
               },
             })
             .catch(() => undefined);
-          logger.error({ feature, err: err instanceof Error ? err.message : String(err) }, "AI call failed");
+          logger.error(
+            { feature, err: err instanceof Error ? err.message : String(err) },
+            "AI call failed",
+          );
           throw err;
         }
       };

@@ -4,12 +4,7 @@ const authMock = vi.fn();
 vi.mock("@/auth", () => ({ auth: () => authMock() }));
 
 import { testDb, resetDb, disconnectDb } from "../helpers/db";
-import {
-  getAdminMetrics,
-  listUsers,
-  setUserRole,
-  setUserDisabled,
-} from "@/services/admin.service";
+import { getAdminMetrics, listUsers, setUserRole, setUserDisabled } from "@/services/admin.service";
 import { requireAdmin, getCurrentUser } from "@/lib/auth/guards";
 
 let adminId: string;
@@ -44,7 +39,9 @@ describe("admin authz (guards)", () => {
   });
 
   it("requireAdmin returns the user when they are an admin", async () => {
-    authMock.mockResolvedValue({ user: { id: adminId, email: "admin@example.com", role: "ADMIN" } });
+    authMock.mockResolvedValue({
+      user: { id: adminId, email: "admin@example.com", role: "ADMIN" },
+    });
     const u = await requireAdmin();
     expect(u.role).toBe("ADMIN");
   });
@@ -59,7 +56,9 @@ describe("admin user management", () => {
   it("promotes and demotes users, writing an audit log", async () => {
     await setUserRole(adminId, userId, "ADMIN");
     expect((await testDb.user.findUnique({ where: { id: userId } }))?.role).toBe("ADMIN");
-    const log = await testDb.auditLog.findFirst({ where: { action: "user.setRole", target: userId } });
+    const log = await testDb.auditLog.findFirst({
+      where: { action: "user.setRole", target: userId },
+    });
     expect(log?.actorId).toBe(adminId);
 
     await setUserRole(adminId, userId, "USER");

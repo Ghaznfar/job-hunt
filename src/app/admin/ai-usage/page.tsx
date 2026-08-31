@@ -35,7 +35,7 @@ export default async function AdminAIUsagePage() {
           <Card key={feature}>
             <CardContent className="p-4">
               <p className="font-medium">{feature}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {s.ok} ok · {s.error} errors · ${(s.cents / 100).toFixed(2)}
               </p>
             </CardContent>
@@ -59,7 +59,9 @@ export default async function AdminAIUsagePage() {
           <TableBody>
             {recent.map((r) => (
               <TableRow key={r.id}>
-                <TableCell className="text-xs text-muted-foreground">{r.user?.email ?? "—"}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">
+                  {r.user?.email ?? "—"}
+                </TableCell>
                 <TableCell>{r.feature}</TableCell>
                 <TableCell className="text-xs">
                   {r.provider} / {r.model}
@@ -71,7 +73,9 @@ export default async function AdminAIUsagePage() {
                 <TableCell className="text-xs">
                   {r.costCents != null ? `$${(r.costCents / 100).toFixed(3)}` : "—"}
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">{relativeDate(r.createdAt)}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">
+                  {relativeDate(r.createdAt)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

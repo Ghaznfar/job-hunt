@@ -33,7 +33,9 @@ export async function getAdminMetrics() {
         ],
       },
     }),
-    prisma.subscription.count({ where: { plan: "PRO", status: { in: ["ACTIVE", "TRIALING", "PAST_DUE"] } } }),
+    prisma.subscription.count({
+      where: { plan: "PRO", status: { in: ["ACTIVE", "TRIALING", "PAST_DUE"] } },
+    }),
     prisma.job.count(),
     prisma.job.count({ where: { jobSkills: { some: {} } } }),
     prisma.application.count(),
@@ -44,7 +46,9 @@ export async function getAdminMetrics() {
       where: { createdAt: { gte: since30 } },
     }),
     prisma.aIRequest.count({ where: { status: "ERROR", createdAt: { gte: since7 } } }),
-    prisma.errorLog.count({ where: { createdAt: { gte: since7 }, level: { in: ["ERROR", "WARN"] } } }),
+    prisma.errorLog.count({
+      where: { createdAt: { gte: since7 }, level: { in: ["ERROR", "WARN"] } },
+    }),
   ]);
 
   return {
@@ -70,7 +74,12 @@ export async function getAdminMetrics() {
 
 export async function listUsers(q?: string, take = 50) {
   const where: Prisma.UserWhereInput = q
-    ? { OR: [{ email: { contains: q, mode: "insensitive" } }, { name: { contains: q, mode: "insensitive" } }] }
+    ? {
+        OR: [
+          { email: { contains: q, mode: "insensitive" } },
+          { name: { contains: q, mode: "insensitive" } },
+        ],
+      }
     : {};
   return prisma.user.findMany({
     where,

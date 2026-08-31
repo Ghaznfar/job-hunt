@@ -40,23 +40,42 @@ export function SecurityCard({ hasPassword }: { hasPassword: boolean }) {
           {hasPassword ? (
             <div className="space-y-2">
               <Label htmlFor="currentPassword">Current password</Label>
-              <Input id="currentPassword" name="currentPassword" type="password" autoComplete="current-password" />
+              <Input
+                id="currentPassword"
+                name="currentPassword"
+                type="password"
+                autoComplete="current-password"
+              />
               {errors.currentPassword ? (
-                <p className="text-xs text-destructive">{errors.currentPassword[0]}</p>
+                <p className="text-destructive text-xs">{errors.currentPassword[0]}</p>
               ) : null}
             </div>
           ) : null}
           <div className="space-y-2">
             <Label htmlFor="newPassword">New password</Label>
-            <Input id="newPassword" name="newPassword" type="password" autoComplete="new-password" required />
+            <Input
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+            />
             {errors.newPassword ? (
-              <p className="text-xs text-destructive">{errors.newPassword[0]}</p>
+              <p className="text-destructive text-xs">{errors.newPassword[0]}</p>
             ) : null}
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirm">Confirm new password</Label>
-            <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required />
-            {errors.confirm ? <p className="text-xs text-destructive">{errors.confirm[0]}</p> : null}
+            <Input
+              id="confirm"
+              name="confirm"
+              type="password"
+              autoComplete="new-password"
+              required
+            />
+            {errors.confirm ? (
+              <p className="text-destructive text-xs">{errors.confirm[0]}</p>
+            ) : null}
           </div>
           <Button type="submit" disabled={pending}>
             {pending ? <Loader2 className="size-4 animate-spin" /> : null}

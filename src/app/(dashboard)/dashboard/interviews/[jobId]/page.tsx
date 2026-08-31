@@ -28,7 +28,10 @@ export default async function InterviewJobPage({ params }: { params: Promise<{ j
   const user = await requireUser();
 
   const [job, questions, usage] = await Promise.all([
-    prisma.job.findUnique({ where: { id: jobId }, select: { id: true, title: true, company: true } }),
+    prisma.job.findUnique({
+      where: { id: jobId },
+      select: { id: true, title: true, company: true },
+    }),
     getInterviewQuestions(user.id, jobId),
     getUsageStatus(user.id, "INTERVIEW_PREP"),
   ]);
@@ -45,7 +48,7 @@ export default async function InterviewJobPage({ params }: { params: Promise<{ j
     <div className="mx-auto max-w-3xl space-y-5">
       <Link
         href="/dashboard/interviews"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" /> All prep sets
       </Link>
@@ -71,7 +74,7 @@ export default async function InterviewJobPage({ params }: { params: Promise<{ j
       ) : questions.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-4 p-10 text-center">
-            <p className="max-w-sm text-sm text-muted-foreground">
+            <p className="text-muted-foreground max-w-sm text-sm">
               Generate a tailored question set for this role. You&apos;ll get technical, scenario,
               behavioral, HR and job-specific questions to practise.
             </p>
@@ -82,7 +85,7 @@ export default async function InterviewJobPage({ params }: { params: Promise<{ j
         <div className="space-y-8">
           {grouped.map((g) => (
             <section key={g.cat} className="space-y-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <h2 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
                 {CATEGORY_LABEL[g.cat]}
               </h2>
               {g.items.map((q) => {

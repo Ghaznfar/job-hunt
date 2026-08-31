@@ -18,7 +18,10 @@ const DEFAULT_WINDOW = 60;
 class MemoryRateLimiter implements RateLimiter {
   private buckets = new Map<string, { count: number; reset: number }>();
 
-  async limit(key: string, opts?: { limit?: number; windowSec?: number }): Promise<RateLimitResult> {
+  async limit(
+    key: string,
+    opts?: { limit?: number; windowSec?: number },
+  ): Promise<RateLimitResult> {
     const limit = opts?.limit ?? DEFAULT_LIMIT;
     const windowMs = (opts?.windowSec ?? DEFAULT_WINDOW) * 1000;
     const now = Date.now();
@@ -41,7 +44,10 @@ class MemoryRateLimiter implements RateLimiter {
 class PostgresRateLimiter implements RateLimiter {
   private fallback = new MemoryRateLimiter();
 
-  async limit(key: string, opts?: { limit?: number; windowSec?: number }): Promise<RateLimitResult> {
+  async limit(
+    key: string,
+    opts?: { limit?: number; windowSec?: number },
+  ): Promise<RateLimitResult> {
     const limit = opts?.limit ?? DEFAULT_LIMIT;
     const windowSec = opts?.windowSec ?? DEFAULT_WINDOW;
     const bucket = Math.floor(Date.now() / 1000 / windowSec);
@@ -64,9 +70,15 @@ class PostgresRateLimiter implements RateLimiter {
 
 class UpstashRateLimiter implements RateLimiter {
   private fallback = new MemoryRateLimiter();
-  constructor(private url: string, private token: string) {}
+  constructor(
+    private url: string,
+    private token: string,
+  ) {}
 
-  async limit(key: string, opts?: { limit?: number; windowSec?: number }): Promise<RateLimitResult> {
+  async limit(
+    key: string,
+    opts?: { limit?: number; windowSec?: number },
+  ): Promise<RateLimitResult> {
     const limit = opts?.limit ?? DEFAULT_LIMIT;
     const windowSec = opts?.windowSec ?? DEFAULT_WINDOW;
     const bucket = Math.floor(Date.now() / 1000 / windowSec);
@@ -94,7 +106,11 @@ let cached: RateLimiter | null = null;
 
 export function getRateLimiter(): RateLimiter {
   if (cached) return cached;
-  if (env.RATELIMIT_DRIVER === "redis" && env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
+  if (
+    env.RATELIMIT_DRIVER === "redis" &&
+    env.UPSTASH_REDIS_REST_URL &&
+    env.UPSTASH_REDIS_REST_TOKEN
+  ) {
     cached = new UpstashRateLimiter(env.UPSTASH_REDIS_REST_URL, env.UPSTASH_REDIS_REST_TOKEN);
   } else if (env.RATELIMIT_DRIVER === "postgres") {
     cached = new PostgresRateLimiter();

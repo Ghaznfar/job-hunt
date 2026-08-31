@@ -23,14 +23,14 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="space-y-4 rounded-xl border bg-card p-6 text-center shadow-sm">
-        <MailCheck className="mx-auto size-10 text-success" />
+      <div className="bg-card space-y-4 rounded-xl border p-6 text-center shadow-sm">
+        <MailCheck className="text-success mx-auto size-10" />
         <h1 className="text-xl font-semibold">Check your email</h1>
-        <p className="text-sm text-muted-foreground">
-          If an account exists for that address, we&apos;ve sent a password reset link. It expires in
-          one hour.
+        <p className="text-muted-foreground text-sm">
+          If an account exists for that address, we&apos;ve sent a password reset link. It expires
+          in one hour.
         </p>
-        <Link href="/login" className="block text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/login" className="text-muted-foreground hover:text-foreground block text-sm">
           Back to log in
         </Link>
       </div>
@@ -38,10 +38,10 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-6 shadow-sm">
+    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-xl border p-6 shadow-sm">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">Reset your password</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Enter your email and we&apos;ll send you a reset link.
         </p>
       </div>
@@ -55,7 +55,7 @@ export function ForgotPasswordForm() {
       </Button>
       <Link
         href="/login"
-        className="block text-center text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground block text-center text-sm"
       >
         Back to log in
       </Link>

@@ -42,7 +42,7 @@ export default async function OverviewPage() {
           <CardContent className="flex flex-col items-start gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-medium">Finish setting up your profile</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Two minutes, and it unlocks accurate job matching.
               </p>
             </div>
@@ -67,7 +67,7 @@ export default async function OverviewPage() {
         ].map((s) => (
           <Card key={s.label}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{s.label}</CardTitle>
+              <CardTitle className="text-muted-foreground text-sm font-medium">{s.label}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{s.value}</p>
@@ -118,7 +118,7 @@ export default async function OverviewPage() {
                       >
                         {r.title}
                       </Link>
-                      <p className="text-sm text-muted-foreground">{r.company}</p>
+                      <p className="text-muted-foreground text-sm">{r.company}</p>
                     </div>
                     {r.verdict ? (
                       <VerdictBadge verdict={r.verdict} score={r.score} />
@@ -142,7 +142,7 @@ export default async function OverviewPage() {
           </CardHeader>
           <CardContent>
             {data.skillGap.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Set target roles in your profile to see the skills most in demand.
               </p>
             ) : (
@@ -158,7 +158,7 @@ export default async function OverviewPage() {
                           </Badge>
                         ) : null}
                       </span>
-                      <span className="text-xs text-muted-foreground">{s.count} roles</span>
+                      <span className="text-muted-foreground text-xs">{s.count} roles</span>
                     </div>
                     <Progress
                       value={Math.min(100, (s.count / (data.skillGap[0]?.count || 1)) * 100)}

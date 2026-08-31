@@ -16,7 +16,10 @@ export default async function TailorPage({ params }: { params: Promise<{ jobId: 
   const user = await requireUser();
 
   const [job, defaultResume, usage] = await Promise.all([
-    prisma.job.findUnique({ where: { id: jobId }, select: { id: true, title: true, company: true } }),
+    prisma.job.findUnique({
+      where: { id: jobId },
+      select: { id: true, title: true, company: true },
+    }),
     prisma.resume.findFirst({
       where: { userId: user.id, isDefault: true },
       select: { id: true, name: true },
@@ -29,7 +32,7 @@ export default async function TailorPage({ params }: { params: Promise<{ jobId: 
     <div className="mx-auto max-w-4xl space-y-5">
       <Link
         href={`/dashboard/jobs/${jobId}`}
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" /> Back to job
       </Link>

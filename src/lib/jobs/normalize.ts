@@ -41,7 +41,8 @@ export function normalizeArrangement(
   return "UNKNOWN";
 }
 
-const YEARS_RE = /(\d{1,2})\s*\+?\s*(?:-\s*(\d{1,2})\s*)?(?:years?|yrs?)\b(?:[^.]{0,30}experience)?/i;
+const YEARS_RE =
+  /(\d{1,2})\s*\+?\s*(?:-\s*(\d{1,2})\s*)?(?:years?|yrs?)\b(?:[^.]{0,30}experience)?/i;
 
 export function detectYears(text: string): { min: number | null; max: number | null } {
   const m = text.match(YEARS_RE);

@@ -10,9 +10,7 @@ function authorized(req: Request): boolean {
   if (!env.CRON_SECRET) return false;
   const header = req.headers.get("authorization");
   const url = new URL(req.url);
-  return (
-    header === `Bearer ${env.CRON_SECRET}` || url.searchParams.get("key") === env.CRON_SECRET
-  );
+  return header === `Bearer ${env.CRON_SECRET}` || url.searchParams.get("key") === env.CRON_SECRET;
 }
 
 async function handle(req: Request) {

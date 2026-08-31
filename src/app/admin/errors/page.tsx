@@ -27,7 +27,10 @@ export default async function AdminErrorsPage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold tracking-tight">System errors</h1>
       {errors.length === 0 ? (
-        <EmptyState title="No logged errors" description="Nothing has been recorded to the error log." />
+        <EmptyState
+          title="No logged errors"
+          description="Nothing has been recorded to the error log."
+        />
       ) : (
         <div className="rounded-lg border">
           <Table>
@@ -47,7 +50,7 @@ export default async function AdminErrorsPage() {
                   </TableCell>
                   <TableCell className="text-xs">{e.source ?? "—"}</TableCell>
                   <TableCell className="max-w-md truncate text-sm">{e.message}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
+                  <TableCell className="text-muted-foreground text-xs">
                     {relativeDate(e.createdAt)}
                   </TableCell>
                 </TableRow>

@@ -74,7 +74,7 @@ export default async function JobsPage({
         <>
           <JobFilters skillOptions={skillOptions} initial={sp} />
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {total} {total === 1 ? "role" : "roles"} match your filters
           </p>
 
@@ -120,10 +120,15 @@ export default async function JobsPage({
               <Button variant="outline" size="sm" disabled={page <= 1} asChild={page > 1}>
                 {page > 1 ? <Link href={pageHref(page - 1)}>Previous</Link> : <span>Previous</span>}
               </Button>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 Page {page} of {pageCount}
               </span>
-              <Button variant="outline" size="sm" disabled={page >= pageCount} asChild={page < pageCount}>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= pageCount}
+                asChild={page < pageCount}
+              >
                 {page < pageCount ? <Link href={pageHref(page + 1)}>Next</Link> : <span>Next</span>}
               </Button>
             </div>

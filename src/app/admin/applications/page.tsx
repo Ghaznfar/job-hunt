@@ -33,13 +33,15 @@ export default async function AdminApplicationsPage() {
           <TableBody>
             {apps.map((a) => (
               <TableRow key={a.id}>
-                <TableCell className="text-xs text-muted-foreground">{a.user.email}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">{a.user.email}</TableCell>
                 <TableCell className="font-medium">{a.title}</TableCell>
                 <TableCell>{a.company}</TableCell>
                 <TableCell>
                   <Badge variant="outline">{STATUS_LABEL[a.status]}</Badge>
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">{relativeDate(a.updatedAt)}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">
+                  {relativeDate(a.updatedAt)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

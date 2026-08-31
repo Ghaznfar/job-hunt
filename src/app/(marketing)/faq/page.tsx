@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "Frequently asked questions about JobHunt — job sources, AI honesty, privacy, pricing and supported roles.",
+  description:
+    "Frequently asked questions about JobHunt — job sources, AI honesty, privacy, pricing and supported roles.",
   alternates: { canonical: "/faq" },
 };
 
@@ -49,7 +50,7 @@ export default function FaqPage() {
         {faqs.map((f) => (
           <div key={f.q} className="py-5">
             <h2 className="font-semibold">{f.q}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
+            <p className="text-muted-foreground mt-2 text-sm">{f.a}</p>
           </div>
         ))}
       </div>

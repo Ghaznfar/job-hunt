@@ -7,8 +7,7 @@ import { getStripe, PRO_PRICE_ID, PORTAL_RETURN_URL } from "@/lib/payments/strip
 import type { SubscriptionStatus } from "@prisma/client";
 
 export { isStripeConfigured };
-export const isDevBillingBypass =
-  !isStripeConfigured && env.NODE_ENV !== "production";
+export const isDevBillingBypass = !isStripeConfigured && env.NODE_ENV !== "production";
 
 const STATUS_MAP: Record<string, SubscriptionStatus> = {
   active: "ACTIVE",
@@ -146,11 +145,7 @@ export async function handleStripeWebhook(rawBody: string, signature: string): P
   if (!isStripeConfigured || !env.STRIPE_WEBHOOK_SECRET) {
     throw new Error("Stripe webhook not configured.");
   }
-  const event = getStripe().webhooks.constructEvent(
-    rawBody,
-    signature,
-    env.STRIPE_WEBHOOK_SECRET,
-  );
+  const event = getStripe().webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
 
   switch (event.type) {
     case "checkout.session.completed": {

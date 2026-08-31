@@ -6,10 +6,7 @@ import { requireUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
 import { ActionResult, ok, fail, parseInput, runAction } from "@/lib/action";
 import { guardUserRate } from "@/lib/rate-guard";
-import {
-  generateInterviewQuestions,
-  submitInterviewAnswer,
-} from "@/services/interview.service";
+import { generateInterviewQuestions, submitInterviewAnswer } from "@/services/interview.service";
 
 export async function generateInterviewQuestionsAction(
   jobId: string,
@@ -39,7 +36,11 @@ export async function submitInterviewAnswerAction(
     const parsed = parseInput(answerSchema, input);
     if (!parsed.ok) return parsed.result;
     await guardUserRate(user.id, "interview-answer");
-    const updated = await submitInterviewAnswer(user.id, parsed.data.questionId, parsed.data.answer);
+    const updated = await submitInterviewAnswer(
+      user.id,
+      parsed.data.questionId,
+      parsed.data.answer,
+    );
     revalidatePath(`/dashboard/interviews/${updated.jobId}`);
     return ok({
       feedback: updated.aiFeedback ?? "",

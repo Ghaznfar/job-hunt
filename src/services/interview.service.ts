@@ -25,7 +25,10 @@ export async function generateInterviewQuestions(userId: string, jobId: string) 
   const [job, profile, userSkills] = await Promise.all([
     prisma.job.findUnique({ where: { id: jobId } }),
     prisma.profile.findUnique({ where: { userId } }),
-    prisma.userSkill.findMany({ where: { userId }, include: { skill: { select: { name: true } } } }),
+    prisma.userSkill.findMany({
+      where: { userId },
+      include: { skill: { select: { name: true } } },
+    }),
   ]);
   if (!job) throw new Error("Job not found");
 
@@ -47,8 +50,12 @@ export async function generateInterviewQuestions(userId: string, jobId: string) 
     },
   );
 
-  const rows: { userId: string; jobId: string; category: InterviewQuestionCategory; question: string }[] =
-    [];
+  const rows: {
+    userId: string;
+    jobId: string;
+    category: InterviewQuestionCategory;
+    question: string;
+  }[] = [];
   for (const key of Object.keys(CATEGORY_MAP) as (keyof AIQuestions)[]) {
     for (const q of data[key] ?? []) {
       if (q?.trim()) rows.push({ userId, jobId, category: CATEGORY_MAP[key], question: q.trim() });

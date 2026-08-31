@@ -26,7 +26,14 @@ export default async function ApplicationsPage({
   if (add) {
     const job = await prisma.job.findUnique({
       where: { id: add },
-      select: { title: true, company: true, url: true, salaryMin: true, salaryMax: true, salaryCurrency: true },
+      select: {
+        title: true,
+        company: true,
+        url: true,
+        salaryMin: true,
+        salaryMax: true,
+        salaryCurrency: true,
+      },
     });
     if (job) {
       const salary =
@@ -45,14 +52,12 @@ export default async function ApplicationsPage({
     redirect("/dashboard/applications");
   }
 
-  const [apps, stats] = await Promise.all([
-    getBoard(user.id),
-    getApplicationStats(user.id),
-  ]);
+  const [apps, stats] = await Promise.all([getBoard(user.id), getApplicationStats(user.id)]);
 
-  const board = Object.fromEntries(
-    STATUS_ORDER.map((s) => [s, [] as BoardCard[]]),
-  ) as Record<ApplicationStatus, BoardCard[]>;
+  const board = Object.fromEntries(STATUS_ORDER.map((s) => [s, [] as BoardCard[]])) as Record<
+    ApplicationStatus,
+    BoardCard[]
+  >;
   for (const a of apps) {
     board[a.status].push({
       id: a.id,
@@ -84,7 +89,7 @@ export default async function ApplicationsPage({
           <Card key={s.label}>
             <CardContent className="p-4">
               <p className="text-2xl font-bold">{s.value}</p>
-              <p className="text-xs text-muted-foreground">{s.label}</p>
+              <p className="text-muted-foreground text-xs">{s.label}</p>
             </CardContent>
           </Card>
         ))}

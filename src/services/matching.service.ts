@@ -182,7 +182,9 @@ export async function getMatchesForUser(userId: string) {
     where: { userId },
     orderBy: [{ overallScore: "desc" }, { createdAt: "desc" }],
     include: {
-      job: { select: { id: true, title: true, company: true, country: true, workArrangement: true } },
+      job: {
+        select: { id: true, title: true, company: true, country: true, workArrangement: true },
+      },
     },
   });
 }

@@ -72,7 +72,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
         <CardContent className="p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
                 Should I apply?
               </p>
               <div className="mt-2">
@@ -81,7 +81,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold">{view.overallScore}%</div>
-              <p className="text-xs text-muted-foreground">overall match</p>
+              <p className="text-muted-foreground text-xs">overall match</p>
             </div>
           </div>
 
@@ -90,13 +90,13 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {view.reasons.length ? (
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-success">
+                <p className="text-success mb-1.5 text-xs font-semibold tracking-wide uppercase">
                   In favour
                 </p>
                 <ul className="space-y-1.5 text-sm">
                   {view.reasons.map((r, i) => (
                     <li key={i} className="flex gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-success" />
+                      <Check className="text-success mt-0.5 size-4 shrink-0" />
                       {r}
                     </li>
                   ))}
@@ -105,16 +105,16 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
             ) : null}
             {view.concerns.length ? (
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-destructive">
+                <p className="text-destructive mb-1.5 text-xs font-semibold tracking-wide uppercase">
                   Concerns
                 </p>
                 <ul className="space-y-1.5 text-sm">
                   {view.concerns.map((c, i) => (
                     <li key={i} className="flex gap-2">
                       {view.verdict === "DONT_APPLY" ? (
-                        <X className="mt-0.5 size-4 shrink-0 text-destructive" />
+                        <X className="text-destructive mt-0.5 size-4 shrink-0" />
                       ) : (
-                        <CircleAlert className="mt-0.5 size-4 shrink-0 text-warning" />
+                        <CircleAlert className="text-warning mt-0.5 size-4 shrink-0" />
                       )}
                       {c}
                     </li>
@@ -158,9 +158,9 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
               <div key={s.slug} className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
                   {s.have ? (
-                    <Check className="size-4 text-success" />
+                    <Check className="text-success size-4" />
                   ) : (
-                    <X className="size-4 text-destructive" />
+                    <X className="text-destructive size-4" />
                   )}
                   {s.name}
                   {s.importance === "REQUIRED" ? (
@@ -175,7 +175,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
               </div>
             ))}
             {view.skillScores.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No skills to compare.</p>
+              <p className="text-muted-foreground text-sm">No skills to compare.</p>
             ) : null}
           </CardContent>
         </Card>
@@ -183,7 +183,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base text-success">Strong matches</CardTitle>
+              <CardTitle className="text-success text-base">Strong matches</CardTitle>
             </CardHeader>
             <CardContent>
               {view.strongMatches.length ? (
@@ -195,13 +195,13 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">None of the listed skills matched.</p>
+                <p className="text-muted-foreground text-sm">None of the listed skills matched.</p>
               )}
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base text-destructive">Missing skills</CardTitle>
+              <CardTitle className="text-destructive text-base">Missing skills</CardTitle>
             </CardHeader>
             <CardContent>
               {view.missingSkills.length ? (
@@ -213,7 +213,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">You have every listed skill.</p>
+                <p className="text-muted-foreground text-sm">You have every listed skill.</p>
               )}
             </CardContent>
           </Card>
@@ -222,7 +222,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
 
       <Card className="bg-muted/30">
         <CardContent className="flex flex-wrap items-center justify-between gap-3 p-5">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Ready to apply? Tailor your CV and generate a cover letter for this role.
           </p>
           <div className="flex gap-2">
@@ -238,7 +238,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
+      <div className="text-muted-foreground flex items-center justify-between text-xs">
         <span>Last analyzed {new Date(view.updatedAt).toLocaleString()}</span>
         <AnalyzeButton jobId={view.jobId} label="Re-run analysis" size="sm" />
       </div>

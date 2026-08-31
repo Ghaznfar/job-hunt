@@ -37,7 +37,9 @@ beforeAll(async () => {
     data: {
       email: "iv@example.com",
       subscription: { create: { plan: "PRO", status: "ACTIVE" } },
-      profile: { create: { currentTitle: "SRE", yearsExperience: 5, onboardingCompletedAt: new Date() } },
+      profile: {
+        create: { currentTitle: "SRE", yearsExperience: 5, onboardingCompletedAt: new Date() },
+      },
     },
   });
   userId = user.id;
@@ -53,9 +55,7 @@ describe("interview prep", () => {
   it("generates questions across all five categories and meters usage", async () => {
     const questions = await generateInterviewQuestions(userId, jobId);
     const cats = new Set(questions.map((q) => q.category));
-    expect(cats).toEqual(
-      new Set(["TECHNICAL", "SCENARIO", "BEHAVIORAL", "HR", "JOB_SPECIFIC"]),
-    );
+    expect(cats).toEqual(new Set(["TECHNICAL", "SCENARIO", "BEHAVIORAL", "HR", "JOB_SPECIFIC"]));
     expect(questions.length).toBeGreaterThanOrEqual(10);
 
     const usage = await testDb.usageCounter.findFirst({
@@ -88,6 +88,8 @@ describe("interview prep", () => {
   it("won't answer another user's question", async () => {
     const other = await testDb.user.create({ data: { email: "iv-other@example.com" } });
     const questions = await getInterviewQuestions(userId, jobId);
-    await expect(submitInterviewAnswer(other.id, questions[0].id, "some answer here")).rejects.toThrow();
+    await expect(
+      submitInterviewAnswer(other.id, questions[0].id, "some answer here"),
+    ).rejects.toThrow();
   });
 });

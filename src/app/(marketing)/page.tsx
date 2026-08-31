@@ -18,10 +18,24 @@ import { Badge } from "@/components/ui/badge";
 import { targetRoles } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "JobHunt — Know which tech jobs are worth applying to",
+  title: { absolute: "JobHunt — Know which tech jobs are worth applying to" },
   description:
     "AI job matching, CV tailoring, cover letters and interview prep for software, DevOps, cloud, SRE, data, security and QA engineers in the US and UK. Stop applying blindly.",
   alternates: { canonical: "/" },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "JobHunt",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description:
+    "AI-powered job matching, CV tailoring, cover letters, interview preparation and application tracking for tech professionals in the US and UK.",
+  offers: [
+    { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
+    { "@type": "Offer", name: "Pro", price: "9.99", priceCurrency: "USD" },
+  ],
 };
 
 const steps = [
@@ -102,9 +116,9 @@ const faqs = [
 function SectionHeading({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: string }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <p className="text-sm font-semibold uppercase tracking-wide text-primary">{eyebrow}</p>
+      <p className="text-primary text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>
       <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-      {sub ? <p className="mt-4 text-muted-foreground">{sub}</p> : null}
+      {sub ? <p className="text-muted-foreground mt-4">{sub}</p> : null}
     </div>
   );
 }
@@ -112,6 +126,10 @@ function SectionHeading({ eyebrow, title, sub }: { eyebrow: string; title: strin
 export default function LandingPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden border-b">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
@@ -122,7 +140,7 @@ export default function LandingPage() {
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
               Find the jobs worth applying to.
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+            <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg">
               AI-powered job matching, CV tailoring, application tracking and interview preparation
               for ambitious tech professionals. Stop applying to hundreds of jobs blindly.
             </p>
@@ -136,7 +154,7 @@ export default function LandingPage() {
                 <Link href="/how-it-works">See how it works</Link>
               </Button>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-4 text-xs">
               No credit card required. Free plan covers the full workflow.
             </p>
           </div>
@@ -169,7 +187,7 @@ export default function LandingPage() {
                     <v.icon className="size-5" />
                     {v.label}
                   </div>
-                  <p className="text-sm text-muted-foreground">{v.text}</p>
+                  <p className="text-muted-foreground text-sm">{v.text}</p>
                 </CardContent>
               </Card>
             ))}
@@ -187,12 +205,12 @@ export default function LandingPage() {
           />
           <ol className="mt-12 grid gap-6 md:grid-cols-4">
             {steps.map((s, i) => (
-              <li key={s.title} className="relative rounded-xl border bg-card p-6">
-                <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+              <li key={s.title} className="bg-card relative rounded-xl border p-6">
+                <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full text-sm font-semibold">
                   {i + 1}
                 </span>
                 <h3 className="mt-4 font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
+                <p className="text-muted-foreground mt-2 text-sm">{s.body}</p>
               </li>
             ))}
           </ol>
@@ -211,11 +229,11 @@ export default function LandingPage() {
             {features.map((f) => (
               <Card key={f.title}>
                 <CardContent className="space-y-3 p-6">
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
                     <f.icon className="size-5" />
                   </div>
                   <h3 className="font-semibold">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.body}</p>
+                  <p className="text-muted-foreground text-sm">{f.body}</p>
                 </CardContent>
               </Card>
             ))}
@@ -224,7 +242,7 @@ export default function LandingPage() {
       </section>
 
       {/* Audience */}
-      <section className="border-b bg-muted/30 py-16">
+      <section className="bg-muted/30 border-b py-16">
         <div className="mx-auto max-w-6xl px-4 text-center sm:px-6">
           <h2 className="text-2xl font-bold tracking-tight">Built for these roles first</h2>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -246,9 +264,9 @@ export default function LandingPage() {
               <CardContent className="space-y-4 p-6">
                 <h3 className="text-lg font-semibold">Free</h3>
                 <p className="text-3xl font-bold">
-                  $0<span className="text-base font-normal text-muted-foreground">/mo</span>
+                  $0<span className="text-muted-foreground text-base font-normal">/mo</span>
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>Job search &amp; details</li>
                   <li>Limited job match analyses</li>
                   <li>Limited CV analyses</li>
@@ -266,9 +284,9 @@ export default function LandingPage() {
                   <Badge>Most popular</Badge>
                 </div>
                 <p className="text-3xl font-bold">
-                  $9.99<span className="text-base font-normal text-muted-foreground">/mo</span>
+                  $9.99<span className="text-muted-foreground text-base font-normal">/mo</span>
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>Higher AI usage limits</li>
                   <li>CV tailoring &amp; cover letters</li>
                   <li>Interview preparation</li>
@@ -294,7 +312,7 @@ export default function LandingPage() {
                   {f.q}
                   <ArrowRight className="size-4 transition-transform group-open:rotate-90" />
                 </summary>
-                <p className="mt-3 text-sm text-muted-foreground">{f.a}</p>
+                <p className="text-muted-foreground mt-3 text-sm">{f.a}</p>
               </details>
             ))}
           </div>
@@ -307,7 +325,7 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Stop guessing. Start applying with intent.
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="text-muted-foreground mt-4">
             Free to start. Your first match analysis takes about two minutes.
           </p>
           <div className="mt-8">

@@ -91,21 +91,21 @@ export default function FeaturesPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
       <h1 className="text-4xl font-bold tracking-tight">Features</h1>
-      <p className="mt-4 max-w-2xl text-muted-foreground">
+      <p className="text-muted-foreground mt-4 max-w-2xl">
         Everything is oriented around making each application count.
       </p>
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         {groups.map((g) => (
           <Card key={g.title}>
             <CardContent className="space-y-3 p-6">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
                 <g.icon className="size-5" />
               </div>
               <h2 className="font-semibold">{g.title}</h2>
-              <ul className="space-y-1.5 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground space-y-1.5 text-sm">
                 {g.points.map((p) => (
                   <li key={p} className="flex gap-2">
-                    <span className="mt-2 size-1 shrink-0 rounded-full bg-muted-foreground" />
+                    <span className="bg-muted-foreground mt-2 size-1 shrink-0 rounded-full" />
                     {p}
                   </li>
                 ))}

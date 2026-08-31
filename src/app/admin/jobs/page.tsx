@@ -39,11 +39,15 @@ export default async function AdminJobsPage() {
               <TableRow key={j.id}>
                 <TableCell className="font-medium">{j.title}</TableCell>
                 <TableCell>{j.company}</TableCell>
-                <TableCell>{j.country} · {j.workArrangement.toLowerCase()}</TableCell>
+                <TableCell>
+                  {j.country} · {j.workArrangement.toLowerCase()}
+                </TableCell>
                 <TableCell>{j.source.key}</TableCell>
                 <TableCell>{j._count.jobSkills}</TableCell>
                 <TableCell>{j._count.jobMatches}</TableCell>
-                <TableCell className="text-xs text-muted-foreground">{relativeDate(j.createdAt)}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">
+                  {relativeDate(j.createdAt)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

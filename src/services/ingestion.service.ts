@@ -92,14 +92,21 @@ async function upsertJob(
   // Sync skills.
   await prisma.jobSkill.deleteMany({ where: { jobId: record.id } });
   const rows = job.skillSlugs
-    .map((s) => ({ jobId: record.id, skillId: skillIds.get(s.slug)!, importance: s.importance, extractedBy: "RULE" as const }))
+    .map((s) => ({
+      jobId: record.id,
+      skillId: skillIds.get(s.slug)!,
+      importance: s.importance,
+      extractedBy: "RULE" as const,
+    }))
     .filter((r) => r.skillId);
   if (rows.length) await prisma.jobSkill.createMany({ data: rows, skipDuplicates: true });
 
   return existing ? "updated" : "created";
 }
 
-export async function runIngestion(opts?: { limitPerProvider?: number }): Promise<IngestionResult[]> {
+export async function runIngestion(opts?: {
+  limitPerProvider?: number;
+}): Promise<IngestionResult[]> {
   const providers = getJobProviders();
   const results: IngestionResult[] = [];
 
@@ -123,7 +130,9 @@ export async function runIngestion(opts?: { limitPerProvider?: number }): Promis
       for (const job of normalized) {
         try {
           const outcome = await upsertJob(source.id, job, ids);
-          result[outcome === "created" ? "created" : outcome === "updated" ? "updated" : "duplicates"]++;
+          result[
+            outcome === "created" ? "created" : outcome === "updated" ? "updated" : "duplicates"
+          ]++;
         } catch (err) {
           result.errors++;
           logger.error({ err: String(err), externalId: job.externalId }, "job upsert failed");

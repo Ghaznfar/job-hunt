@@ -28,7 +28,7 @@ export default async function ResumeDetailPage({ params }: { params: Promise<{ i
     <div className="space-y-4">
       <Link
         href="/dashboard/resumes"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" /> All CVs
       </Link>

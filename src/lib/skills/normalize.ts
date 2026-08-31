@@ -62,7 +62,10 @@ export function extractSkills(text: string): CanonicalSkill[] {
 }
 
 /** Split a comma / newline / semicolon separated list into canonical skills. */
-export function parseSkillList(input: string): { resolved: CanonicalSkill[]; unresolved: string[] } {
+export function parseSkillList(input: string): {
+  resolved: CanonicalSkill[];
+  unresolved: string[];
+} {
   const parts = input
     .split(/[\n,;•]+/)
     .map((p) => p.trim())

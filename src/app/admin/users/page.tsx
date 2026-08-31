@@ -27,7 +27,12 @@ export default async function AdminUsersPage({
     <div className="space-y-4">
       <h1 className="text-2xl font-bold tracking-tight">Users</h1>
       <form>
-        <Input name="q" defaultValue={q} placeholder="Search by email or name" className="max-w-xs" />
+        <Input
+          name="q"
+          defaultValue={q}
+          placeholder="Search by email or name"
+          className="max-w-xs"
+        />
       </form>
       <div className="rounded-lg border">
         <Table>
@@ -46,7 +51,7 @@ export default async function AdminUsersPage({
               <TableRow key={u.id} className={u.disabledAt ? "opacity-60" : ""}>
                 <TableCell>
                   <div className="font-medium">{u.name ?? "—"}</div>
-                  <div className="text-xs text-muted-foreground">{u.email}</div>
+                  <div className="text-muted-foreground text-xs">{u.email}</div>
                   {!u.emailVerified ? (
                     <Badge variant="outline" className="mt-1 text-[10px]">
                       unverified
@@ -66,10 +71,11 @@ export default async function AdminUsersPage({
                 <TableCell>
                   <Badge variant={u.role === "ADMIN" ? "destructive" : "outline"}>{u.role}</Badge>
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
-                  {u._count.applications} apps · {u._count.resumes} CVs · {u._count.jobMatches} matches
+                <TableCell className="text-muted-foreground text-xs">
+                  {u._count.applications} apps · {u._count.resumes} CVs · {u._count.jobMatches}{" "}
+                  matches
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground text-xs">
                   {relativeDate(u.createdAt)}
                 </TableCell>
                 <TableCell>

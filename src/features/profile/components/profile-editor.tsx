@@ -100,7 +100,7 @@ export function ProfileEditor({
         </CardContent>
       </Card>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      {error ? <p className="text-destructive text-sm">{error}</p> : null}
 
       <div className="flex justify-end">
         <Button onClick={saveProfile} disabled={savingProfile}>
@@ -114,7 +114,7 @@ export function ProfileEditor({
           <CardTitle>Skills &amp; technologies</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Only include skills you genuinely have. These drive your match scores and skill-gap
             analysis.
           </p>

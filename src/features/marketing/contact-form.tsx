@@ -30,29 +30,29 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="rounded-xl border bg-card p-6 text-center">
+      <div className="bg-card rounded-xl border p-6 text-center">
         <p className="font-medium">Thanks — we&apos;ve got your message.</p>
-        <p className="mt-1 text-sm text-muted-foreground">We&apos;ll get back to you by email.</p>
+        <p className="text-muted-foreground mt-1 text-sm">We&apos;ll get back to you by email.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-6">
+    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-xl border p-6">
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input id="name" name="name" required />
-        {errors.name ? <p className="text-xs text-destructive">{errors.name[0]}</p> : null}
+        {errors.name ? <p className="text-destructive text-xs">{errors.name[0]}</p> : null}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" required />
-        {errors.email ? <p className="text-xs text-destructive">{errors.email[0]}</p> : null}
+        {errors.email ? <p className="text-destructive text-xs">{errors.email[0]}</p> : null}
       </div>
       <div className="space-y-2">
         <Label htmlFor="message">Message</Label>
         <Textarea id="message" name="message" rows={5} required />
-        {errors.message ? <p className="text-xs text-destructive">{errors.message[0]}</p> : null}
+        {errors.message ? <p className="text-destructive text-xs">{errors.message[0]}</p> : null}
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? <Loader2 className="size-4 animate-spin" /> : null}

@@ -46,7 +46,14 @@ export async function createApplicationFromJobAction(
     const user = await requireUser();
     const job = await prisma.job.findUnique({
       where: { id: jobId },
-      select: { title: true, company: true, url: true, salaryMin: true, salaryMax: true, salaryCurrency: true },
+      select: {
+        title: true,
+        company: true,
+        url: true,
+        salaryMin: true,
+        salaryMax: true,
+        salaryCurrency: true,
+      },
     });
     if (!job) return fail("Job not found.");
     const salary =
@@ -128,7 +135,11 @@ export interface ApplicationDetail {
   nextInterviewAt: string | null;
   jobId: string | null;
   notes: { id: string; body: string; createdAt: string }[];
-  events: { fromStatus: ApplicationStatus | null; toStatus: ApplicationStatus; createdAt: string }[];
+  events: {
+    fromStatus: ApplicationStatus | null;
+    toStatus: ApplicationStatus;
+    createdAt: string;
+  }[];
 }
 
 export async function getApplicationDetailAction(
@@ -149,7 +160,11 @@ export async function getApplicationDetailAction(
       contactEmail: app.contactEmail,
       nextInterviewAt: app.nextInterviewAt?.toISOString() ?? null,
       jobId: app.jobId,
-      notes: app.notes.map((n) => ({ id: n.id, body: n.body, createdAt: n.createdAt.toISOString() })),
+      notes: app.notes.map((n) => ({
+        id: n.id,
+        body: n.body,
+        createdAt: n.createdAt.toISOString(),
+      })),
       events: app.events.map((e) => ({
         fromStatus: e.fromStatus,
         toStatus: e.toStatus,

@@ -14,7 +14,10 @@ export const metadata: Metadata = { title: "Settings" };
 export default async function SettingsPage() {
   const user = await requireUser();
   const [record, subscription] = await Promise.all([
-    prisma.user.findUnique({ where: { id: user.id }, select: { hashedPassword: true, email: true } }),
+    prisma.user.findUnique({
+      where: { id: user.id },
+      select: { hashedPassword: true, email: true },
+    }),
     prisma.subscription.findUnique({ where: { userId: user.id } }),
   ]);
 
@@ -48,7 +51,7 @@ export default async function SettingsPage() {
           <CardTitle>Billing</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {subscription?.plan === "PRO"
               ? "You're on Pro. Manage or cancel your subscription."
               : "Upgrade to Pro for CV tailoring, cover letters, interview prep and higher limits."}

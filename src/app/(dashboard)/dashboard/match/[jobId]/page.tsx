@@ -18,10 +18,16 @@ export default async function MatchPage({ params }: { params: Promise<{ jobId: s
   const user = await requireUser();
 
   const [job, match, resumeCount, profile] = await Promise.all([
-    prisma.job.findUnique({ where: { id: jobId }, select: { id: true, title: true, company: true } }),
+    prisma.job.findUnique({
+      where: { id: jobId },
+      select: { id: true, title: true, company: true },
+    }),
     getMatch(user.id, jobId),
     prisma.resume.count({ where: { userId: user.id } }),
-    prisma.profile.findUnique({ where: { userId: user.id }, select: { onboardingCompletedAt: true } }),
+    prisma.profile.findUnique({
+      where: { userId: user.id },
+      select: { onboardingCompletedAt: true },
+    }),
   ]);
   if (!job) notFound();
 
@@ -29,7 +35,7 @@ export default async function MatchPage({ params }: { params: Promise<{ jobId: s
     <div className="mx-auto max-w-4xl space-y-5">
       <Link
         href={`/dashboard/jobs/${jobId}`}
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" /> Back to job
       </Link>
@@ -62,7 +68,7 @@ export default async function MatchPage({ params }: { params: Promise<{ jobId: s
       ) : !match ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-4 p-10 text-center">
-            <p className="max-w-sm text-sm text-muted-foreground">
+            <p className="text-muted-foreground max-w-sm text-sm">
               Run a match analysis to score this role across technical fit, experience, location,
               salary, seniority and eligibility — and get a clear Apply / Maybe / Don&apos;t Apply
               verdict.

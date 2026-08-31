@@ -57,8 +57,8 @@ export function ResumeEditor({
 
   return (
     <div className="space-y-6">
-      <div className="sticky top-16 z-10 -mx-4 flex items-center justify-between border-b bg-background/90 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-lg sm:border sm:px-4">
-        <p className="text-sm text-muted-foreground">
+      <div className="bg-background/90 sticky top-16 z-10 -mx-4 flex items-center justify-between border-b px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-lg sm:border sm:px-4">
+        <p className="text-muted-foreground text-sm">
           {dirty ? "Unsaved changes" : "All changes saved"}
         </p>
         <Button onClick={save} disabled={pending || !dirty} size="sm">
@@ -91,7 +91,16 @@ export function ResumeEditor({
               update({
                 experience: [
                   ...data.experience,
-                  { company: "", title: "", location: "", startDate: "", endDate: "", current: false, bullets: [], techs: [] },
+                  {
+                    company: "",
+                    title: "",
+                    location: "",
+                    startDate: "",
+                    endDate: "",
+                    current: false,
+                    bullets: [],
+                    techs: [],
+                  },
                 ],
               })
             }
@@ -101,17 +110,19 @@ export function ResumeEditor({
         </CardHeader>
         <CardContent className="space-y-6">
           {data.experience.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No experience entries yet.</p>
+            <p className="text-muted-foreground text-sm">No experience entries yet.</p>
           ) : null}
           {data.experience.map((exp, i) => (
             <div key={i} className="rounded-lg border p-4">
               <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-2 text-xs">
                   <GripVertical className="size-3.5" /> Role {i + 1}
                 </div>
                 <button
                   className="text-destructive"
-                  onClick={() => update({ experience: data.experience.filter((_, idx) => idx !== i) })}
+                  onClick={() =>
+                    update({ experience: data.experience.filter((_, idx) => idx !== i) })
+                  }
                   aria-label="Remove role"
                 >
                   <Trash2 className="size-4" />
@@ -120,11 +131,17 @@ export function ResumeEditor({
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1">
                   <Label>Title</Label>
-                  <Input value={exp.title} onChange={(e) => updateExp(i, { title: e.target.value })} />
+                  <Input
+                    value={exp.title}
+                    onChange={(e) => updateExp(i, { title: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label>Company</Label>
-                  <Input value={exp.company} onChange={(e) => updateExp(i, { company: e.target.value })} />
+                  <Input
+                    value={exp.company}
+                    onChange={(e) => updateExp(i, { company: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label>Start</Label>
@@ -148,7 +165,12 @@ export function ResumeEditor({
                 <input
                   type="checkbox"
                   checked={exp.current}
-                  onChange={(e) => updateExp(i, { current: e.target.checked, endDate: e.target.checked ? "" : exp.endDate })}
+                  onChange={(e) =>
+                    updateExp(i, {
+                      current: e.target.checked,
+                      endDate: e.target.checked ? "" : exp.endDate,
+                    })
+                  }
                 />
                 I currently work here
               </label>
@@ -157,7 +179,9 @@ export function ResumeEditor({
                 <Textarea
                   rows={4}
                   value={exp.bullets.join("\n")}
-                  onChange={(e) => updateExp(i, { bullets: e.target.value.split("\n").filter((x) => x.trim()) })}
+                  onChange={(e) =>
+                    updateExp(i, { bullets: e.target.value.split("\n").filter((x) => x.trim()) })
+                  }
                 />
               </div>
               <div className="mt-3 space-y-1">
@@ -198,7 +222,9 @@ export function ResumeEditor({
               <div className="mb-2 flex justify-end">
                 <button
                   className="text-destructive"
-                  onClick={() => update({ education: data.education.filter((_, idx) => idx !== i) })}
+                  onClick={() =>
+                    update({ education: data.education.filter((_, idx) => idx !== i) })
+                  }
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -213,21 +239,30 @@ export function ResumeEditor({
                 </div>
                 <div className="space-y-1">
                   <Label>Degree</Label>
-                  <Input value={edu.degree} onChange={(e) => updateEdu(i, { degree: e.target.value })} />
+                  <Input
+                    value={edu.degree}
+                    onChange={(e) => updateEdu(i, { degree: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label>Field</Label>
-                  <Input value={edu.field} onChange={(e) => updateEdu(i, { field: e.target.value })} />
+                  <Input
+                    value={edu.field}
+                    onChange={(e) => updateEdu(i, { field: e.target.value })}
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label>Year</Label>
-                  <Input value={edu.endDate} onChange={(e) => updateEdu(i, { endDate: e.target.value })} />
+                  <Input
+                    value={edu.endDate}
+                    onChange={(e) => updateEdu(i, { endDate: e.target.value })}
+                  />
                 </div>
               </div>
             </div>
           ))}
           {data.education.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No education entries yet.</p>
+            <p className="text-muted-foreground text-sm">No education entries yet.</p>
           ) : null}
         </CardContent>
       </Card>
@@ -244,7 +279,7 @@ export function ResumeEditor({
             placeholder="Add a skill"
             max={60}
           />
-          <p className="mt-2 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-xs">
             These feed job matching. Keep them accurate.
           </p>
         </CardContent>
@@ -258,7 +293,9 @@ export function ResumeEditor({
           <Textarea
             rows={3}
             placeholder="One per line, e.g. AWS Solutions Architect – Associate"
-            value={data.certifications.map((c) => (c.issuer ? `${c.name} — ${c.issuer}` : c.name)).join("\n")}
+            value={data.certifications
+              .map((c) => (c.issuer ? `${c.name} — ${c.issuer}` : c.name))
+              .join("\n")}
             onChange={(e) =>
               update({
                 certifications: e.target.value

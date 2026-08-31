@@ -36,14 +36,14 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
 
   if (done) {
     return (
-      <div className="space-y-4 rounded-xl border bg-card p-6 text-center shadow-sm">
-        <CheckCircle2 className="mx-auto size-10 text-success" />
+      <div className="bg-card space-y-4 rounded-xl border p-6 text-center shadow-sm">
+        <CheckCircle2 className="text-success mx-auto size-10" />
         <h1 className="text-xl font-semibold">Check your email</h1>
-        <p className="text-sm text-muted-foreground">
-          We sent a verification link to <span className="font-medium text-foreground">{done}</span>.
-          Click it to activate your account.
+        <p className="text-muted-foreground text-sm">
+          We sent a verification link to <span className="text-foreground font-medium">{done}</span>
+          . Click it to activate your account.
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           In development the link is printed to the server console.
         </p>
         <Button
@@ -54,7 +54,7 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
         >
           Resend link
         </Button>
-        <Link href="/login" className="block text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/login" className="text-muted-foreground hover:text-foreground block text-sm">
           Back to log in
         </Link>
       </div>
@@ -62,10 +62,10 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-6 shadow-sm">
+    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-xl border p-6 shadow-sm">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">Create your account</h1>
-        <p className="text-sm text-muted-foreground">Free to start. No credit card.</p>
+        <p className="text-muted-foreground text-sm">Free to start. No credit card.</p>
       </div>
 
       {formError ? (
@@ -77,12 +77,12 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
       <div className="space-y-2">
         <Label htmlFor="name">Full name</Label>
         <Input id="name" name="name" autoComplete="name" required />
-        {errors.name ? <p className="text-xs text-destructive">{errors.name[0]}</p> : null}
+        {errors.name ? <p className="text-destructive text-xs">{errors.name[0]}</p> : null}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" autoComplete="email" required />
-        {errors.email ? <p className="text-xs text-destructive">{errors.email[0]}</p> : null}
+        {errors.email ? <p className="text-destructive text-xs">{errors.email[0]}</p> : null}
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
@@ -96,15 +96,15 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
           onChange={(e) => setPw(e.target.value)}
         />
         <div className="flex items-center gap-2">
-          <div className="h-1 flex-1 rounded bg-muted">
+          <div className="bg-muted h-1 flex-1 rounded">
             <div
-              className="h-1 rounded bg-primary transition-all"
+              className="bg-primary h-1 rounded transition-all"
               style={{ width: `${(strength.score / 4) * 100}%` }}
             />
           </div>
-          <span className="w-16 text-right text-xs text-muted-foreground">{strength.label}</span>
+          <span className="text-muted-foreground w-16 text-right text-xs">{strength.label}</span>
         </div>
-        {errors.password ? <p className="text-xs text-destructive">{errors.password[0]}</p> : null}
+        {errors.password ? <p className="text-destructive text-xs">{errors.password[0]}</p> : null}
       </div>
 
       <Button type="submit" className="w-full" disabled={pending}>
@@ -114,17 +114,17 @@ export function SignupForm({ next, googleEnabled }: { next?: string; googleEnabl
 
       {googleEnabled ? (
         <>
-          <div className="relative py-1 text-center text-xs text-muted-foreground">
-            <span className="relative z-10 bg-card px-2">or</span>
+          <div className="text-muted-foreground relative py-1 text-center text-xs">
+            <span className="bg-card relative z-10 px-2">or</span>
             <span className="absolute inset-x-0 top-1/2 border-t" />
           </div>
           <GoogleButton next={next} />
         </>
       ) : null}
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-foreground hover:underline">
+        <Link href="/login" className="text-foreground font-medium hover:underline">
           Log in
         </Link>
       </p>

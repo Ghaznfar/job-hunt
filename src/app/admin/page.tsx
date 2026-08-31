@@ -9,8 +9,8 @@ function Stat({ label, value, sub }: { label: string; value: string | number; su
     <Card>
       <CardContent className="p-4">
         <p className="text-2xl font-bold">{value}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-        {sub ? <p className="mt-1 text-xs text-muted-foreground">{sub}</p> : null}
+        <p className="text-muted-foreground text-xs">{label}</p>
+        {sub ? <p className="text-muted-foreground mt-1 text-xs">{sub}</p> : null}
       </CardContent>
     </Card>
   );
@@ -23,7 +23,7 @@ export default async function AdminOverviewPage() {
       <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Users</h2>
+        <h2 className="text-muted-foreground mb-2 text-sm font-semibold">Users</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           <Stat label="Total users" value={m.users.total} />
           <Stat label="New (7d)" value={m.users.new7d} />
@@ -34,9 +34,13 @@ export default async function AdminOverviewPage() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-muted-foreground">Activity</h2>
+        <h2 className="text-muted-foreground mb-2 text-sm font-semibold">Activity</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="Jobs in catalog" value={m.jobs.total} sub={`${m.jobs.withSkills} with skills`} />
+          <Stat
+            label="Jobs in catalog"
+            value={m.jobs.total}
+            sub={`${m.jobs.withSkills} with skills`}
+          />
           <Stat label="Applications" value={m.applications} />
           <Stat label="Match analyses" value={m.matches} />
           <Stat label="Errors (7d)" value={m.errors7d} />
@@ -44,7 +48,7 @@ export default async function AdminOverviewPage() {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-muted-foreground">AI (last 30 days)</h2>
+        <h2 className="text-muted-foreground mb-2 text-sm font-semibold">AI (last 30 days)</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Stat label="Requests" value={m.ai.requests30d} />
           <Stat label="Est. cost" value={`$${m.ai.costUsd30d}`} />

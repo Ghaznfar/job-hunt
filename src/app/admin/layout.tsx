@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Logo href="/dashboard" />
           <Badge variant="destructive">Admin</Badge>
         </div>
-        <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/dashboard" className="text-muted-foreground hover:text-foreground text-sm">
           Back to app
         </Link>
       </header>
@@ -34,7 +34,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link
                 key={n.href}
                 href={n.href}
-                className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                className="text-muted-foreground hover:bg-accent hover:text-foreground block rounded-md px-3 py-2 text-sm"
               >
                 {n.label}
               </Link>

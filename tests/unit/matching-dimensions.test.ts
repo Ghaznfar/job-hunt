@@ -80,15 +80,25 @@ describe("scoreExperience", () => {
     expect(scoreExperience(candidate({ yearsExperience: 4 }), job()).score).toBe(100);
   });
   it("penalises being under the minimum", () => {
-    expect(scoreExperience(candidate({ yearsExperience: 1 }), job({ minYearsRequired: 5, maxYearsRequired: 8 })).score).toBeLessThan(40);
+    expect(
+      scoreExperience(
+        candidate({ yearsExperience: 1 }),
+        job({ minYearsRequired: 5, maxYearsRequired: 8 }),
+      ).score,
+    ).toBeLessThan(40);
   });
   it("mildly penalises being over the maximum", () => {
-    const s = scoreExperience(candidate({ yearsExperience: 15 }), job({ minYearsRequired: 3, maxYearsRequired: 6 })).score;
+    const s = scoreExperience(
+      candidate({ yearsExperience: 15 }),
+      job({ minYearsRequired: 3, maxYearsRequired: 6 }),
+    ).score;
     expect(s).toBeGreaterThanOrEqual(70);
     expect(s).toBeLessThan(100);
   });
   it("is neutral when no requirement is stated", () => {
-    expect(scoreExperience(candidate(), job({ minYearsRequired: null, maxYearsRequired: null })).score).toBe(80);
+    expect(
+      scoreExperience(candidate(), job({ minYearsRequired: null, maxYearsRequired: null })).score,
+    ).toBe(80);
   });
 });
 
@@ -110,10 +120,17 @@ describe("scoreLocation", () => {
 
 describe("scoreSalary", () => {
   it("is 100 when the offer meets expectation", () => {
-    expect(scoreSalary(candidate({ salaryExpectation: 70000 }), job({ salaryMax: 80000 })).score).toBe(100);
+    expect(
+      scoreSalary(candidate({ salaryExpectation: 70000 }), job({ salaryMax: 80000 })).score,
+    ).toBe(100);
   });
   it("scores below when the offer is well under expectation", () => {
-    expect(scoreSalary(candidate({ salaryExpectation: 120000 }), job({ salaryMin: 60000, salaryMax: 70000 })).score).toBeLessThan(70);
+    expect(
+      scoreSalary(
+        candidate({ salaryExpectation: 120000 }),
+        job({ salaryMin: 60000, salaryMax: 70000 }),
+      ).score,
+    ).toBeLessThan(70);
   });
   it("won't compare across currencies", () => {
     const s = scoreSalary(candidate({ salaryCurrency: "USD" }), job({ salaryCurrency: "GBP" }));
@@ -124,16 +141,27 @@ describe("scoreSalary", () => {
 
 describe("scoreSeniority", () => {
   it("matches equal levels", () => {
-    expect(scoreSeniority(candidate({ currentTitle: "DevOps Engineer" }), job({ seniorityLevel: "mid" })).score).toBe(100);
+    expect(
+      scoreSeniority(candidate({ currentTitle: "DevOps Engineer" }), job({ seniorityLevel: "mid" }))
+        .score,
+    ).toBe(100);
   });
   it("flags a job well above the candidate level", () => {
-    expect(scoreSeniority(candidate({ currentTitle: "Junior Engineer", yearsExperience: 1 }), job({ seniorityLevel: "principal" })).score).toBeLessThan(50);
+    expect(
+      scoreSeniority(
+        candidate({ currentTitle: "Junior Engineer", yearsExperience: 1 }),
+        job({ seniorityLevel: "principal" }),
+      ).score,
+    ).toBeLessThan(50);
   });
 });
 
 describe("scoreEligibility", () => {
   it("is 100 for a citizen with no auth requirement", () => {
-    const r = scoreEligibility(candidate({ workAuthorizations: { GB: "CITIZEN" } }), job({ country: "GB" }));
+    const r = scoreEligibility(
+      candidate({ workAuthorizations: { GB: "CITIZEN" } }),
+      job({ country: "GB" }),
+    );
     expect(r.score).toBe(100);
     expect(r.flags.sponsorshipBlocked).toBe(false);
   });
@@ -150,7 +178,10 @@ describe("scoreEligibility", () => {
   });
 
   it("is favourable when sponsorship is needed and offered", () => {
-    const c = candidate({ workAuthorizations: { US: "NEEDS_SPONSORSHIP" }, needsSponsorship: true });
+    const c = candidate({
+      workAuthorizations: { US: "NEEDS_SPONSORSHIP" },
+      needsSponsorship: true,
+    });
     const j = job({ country: "US", sponsorshipAvailable: "YES" });
     expect(scoreEligibility(c, j).score).toBeGreaterThanOrEqual(70);
   });

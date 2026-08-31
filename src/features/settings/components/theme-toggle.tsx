@@ -38,7 +38,9 @@ export function ThemeToggle() {
           onClick={() => apply(o.value)}
           className={cn(
             "flex items-center gap-1.5 rounded px-3 py-1.5 text-sm transition-colors",
-            mode === o.value ? "bg-secondary text-secondary-foreground" : "text-muted-foreground hover:text-foreground",
+            mode === o.value
+              ? "bg-secondary text-secondary-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <o.icon className="size-4" />

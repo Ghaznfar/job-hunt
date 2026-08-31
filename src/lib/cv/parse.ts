@@ -43,7 +43,9 @@ export function validateUpload(
   }
   // The magic bytes are authoritative. Declared MIME / extension must not conflict.
   if (declaredKind && declaredKind !== sniffed) {
-    throw new UploadValidationError("File content does not match its type. Upload a valid PDF or DOCX.");
+    throw new UploadValidationError(
+      "File content does not match its type. Upload a valid PDF or DOCX.",
+    );
   }
   if (extKind && extKind !== sniffed) {
     throw new UploadValidationError("File extension does not match its content.");

@@ -35,10 +35,10 @@ export function LoginForm({ next, googleEnabled }: { next?: string; googleEnable
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-6 shadow-sm">
+    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-xl border p-6 shadow-sm">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">Log in</h1>
-        <p className="text-sm text-muted-foreground">Welcome back. Enter your details.</p>
+        <p className="text-muted-foreground text-sm">Welcome back. Enter your details.</p>
       </div>
 
       {error ? (
@@ -54,11 +54,20 @@ export function LoginForm({ next, googleEnabled }: { next?: string; googleEnable
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
-          <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground">
+          <Link
+            href="/forgot-password"
+            className="text-muted-foreground hover:text-foreground text-xs"
+          >
             Forgot password?
           </Link>
         </div>
-        <Input id="password" name="password" type="password" autoComplete="current-password" required />
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
       </div>
 
       <Button type="submit" className="w-full" disabled={pending}>
@@ -68,17 +77,17 @@ export function LoginForm({ next, googleEnabled }: { next?: string; googleEnable
 
       {googleEnabled ? (
         <>
-          <div className="relative py-1 text-center text-xs text-muted-foreground">
-            <span className="relative z-10 bg-card px-2">or</span>
+          <div className="text-muted-foreground relative py-1 text-center text-xs">
+            <span className="bg-card relative z-10 px-2">or</span>
             <span className="absolute inset-x-0 top-1/2 border-t" />
           </div>
           <GoogleButton next={next} />
         </>
       ) : null}
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="font-medium text-foreground hover:underline">
+        <Link href="/signup" className="text-foreground font-medium hover:underline">
           Sign up
         </Link>
       </p>

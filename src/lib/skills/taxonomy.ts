@@ -46,15 +46,35 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
   { slug: "scala", name: "Scala", category: "language", aliases: [] },
 
   // Cloud
-  { slug: "aws", name: "AWS", category: "cloud", aliases: ["amazon web services", "ec2", "amazon aws"] },
+  {
+    slug: "aws",
+    name: "AWS",
+    category: "cloud",
+    aliases: ["amazon web services", "ec2", "amazon aws"],
+  },
   { slug: "azure", name: "Azure", category: "cloud", aliases: ["microsoft azure", "az"] },
-  { slug: "gcp", name: "GCP", category: "cloud", aliases: ["google cloud", "google cloud platform"] },
+  {
+    slug: "gcp",
+    name: "GCP",
+    category: "cloud",
+    aliases: ["google cloud", "google cloud platform"],
+  },
   { slug: "lambda", name: "AWS Lambda", category: "cloud", aliases: ["serverless", "faas"] },
   { slug: "cloudformation", name: "CloudFormation", category: "iac", aliases: ["cfn"] },
 
   // Containers / orchestration
-  { slug: "docker", name: "Docker", category: "container", aliases: ["containers", "containerization", "containerisation"] },
-  { slug: "kubernetes", name: "Kubernetes", category: "container", aliases: ["k8s", "kube", "eks", "aks", "gke"] },
+  {
+    slug: "docker",
+    name: "Docker",
+    category: "container",
+    aliases: ["containers", "containerization", "containerisation"],
+  },
+  {
+    slug: "kubernetes",
+    name: "Kubernetes",
+    category: "container",
+    aliases: ["k8s", "kube", "eks", "aks", "gke"],
+  },
   { slug: "helm", name: "Helm", category: "container", aliases: ["helm charts"] },
   { slug: "istio", name: "Istio", category: "container", aliases: ["service mesh"] },
   { slug: "openshift", name: "OpenShift", category: "container", aliases: ["ocp"] },
@@ -67,7 +87,12 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
 
   // CI/CD
   { slug: "jenkins", name: "Jenkins", category: "cicd", aliases: [] },
-  { slug: "github-actions", name: "GitHub Actions", category: "cicd", aliases: ["gha", "github ci"] },
+  {
+    slug: "github-actions",
+    name: "GitHub Actions",
+    category: "cicd",
+    aliases: ["gha", "github ci"],
+  },
   { slug: "gitlab-ci", name: "GitLab CI", category: "cicd", aliases: ["gitlab pipelines"] },
   { slug: "argocd", name: "Argo CD", category: "cicd", aliases: ["argo cd", "gitops"] },
   { slug: "circleci", name: "CircleCI", category: "cicd", aliases: [] },
@@ -77,12 +102,27 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
   { slug: "grafana", name: "Grafana", category: "observability", aliases: [] },
   { slug: "datadog", name: "Datadog", category: "observability", aliases: ["dd"] },
   { slug: "opentelemetry", name: "OpenTelemetry", category: "observability", aliases: ["otel"] },
-  { slug: "elk", name: "ELK Stack", category: "observability", aliases: ["elasticsearch logstash kibana", "elastic stack"] },
+  {
+    slug: "elk",
+    name: "ELK Stack",
+    category: "observability",
+    aliases: ["elasticsearch logstash kibana", "elastic stack"],
+  },
   { slug: "splunk", name: "Splunk", category: "observability", aliases: [] },
-  { slug: "pagerduty", name: "PagerDuty", category: "observability", aliases: ["on-call", "oncall"] },
+  {
+    slug: "pagerduty",
+    name: "PagerDuty",
+    category: "observability",
+    aliases: ["on-call", "oncall"],
+  },
 
   // Databases
-  { slug: "postgresql", name: "PostgreSQL", category: "database", aliases: ["postgres", "psql", "pg"] },
+  {
+    slug: "postgresql",
+    name: "PostgreSQL",
+    category: "database",
+    aliases: ["postgres", "psql", "pg"],
+  },
   { slug: "mysql", name: "MySQL", category: "database", aliases: ["mariadb"] },
   { slug: "mongodb", name: "MongoDB", category: "database", aliases: ["mongo"] },
   { slug: "redis", name: "Redis", category: "database", aliases: ["elasticache"] },
@@ -96,10 +136,25 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
   // Security
   { slug: "iam", name: "IAM", category: "security", aliases: ["identity and access management"] },
   { slug: "siem", name: "SIEM", category: "security", aliases: [] },
-  { slug: "pentesting", name: "Penetration Testing", category: "security", aliases: ["pen testing", "pen-testing", "offensive security"] },
+  {
+    slug: "pentesting",
+    name: "Penetration Testing",
+    category: "security",
+    aliases: ["pen testing", "pen-testing", "offensive security"],
+  },
   { slug: "owasp", name: "OWASP", category: "security", aliases: ["owasp top 10"] },
-  { slug: "vulnerability-management", name: "Vulnerability Management", category: "security", aliases: ["vuln management", "patch management"] },
-  { slug: "soc2", name: "SOC 2", category: "security", aliases: ["soc2", "iso 27001", "compliance"] },
+  {
+    slug: "vulnerability-management",
+    name: "Vulnerability Management",
+    category: "security",
+    aliases: ["vuln management", "patch management"],
+  },
+  {
+    slug: "soc2",
+    name: "SOC 2",
+    category: "security",
+    aliases: ["soc2", "iso 27001", "compliance"],
+  },
   { slug: "zero-trust", name: "Zero Trust", category: "security", aliases: ["ztna"] },
 
   // Testing / QA
@@ -109,12 +164,32 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
   { slug: "jest", name: "Jest", category: "testing", aliases: [] },
   { slug: "pytest", name: "pytest", category: "testing", aliases: [] },
   { slug: "junit", name: "JUnit", category: "testing", aliases: [] },
-  { slug: "test-automation", name: "Test Automation", category: "testing", aliases: ["automated testing", "qa automation"] },
-  { slug: "performance-testing", name: "Performance Testing", category: "testing", aliases: ["load testing", "jmeter", "k6", "gatling"] },
+  {
+    slug: "test-automation",
+    name: "Test Automation",
+    category: "testing",
+    aliases: ["automated testing", "qa automation"],
+  },
+  {
+    slug: "performance-testing",
+    name: "Performance Testing",
+    category: "testing",
+    aliases: ["load testing", "jmeter", "k6", "gatling"],
+  },
 
   // OS / networking
-  { slug: "linux", name: "Linux", category: "os", aliases: ["unix", "rhel", "ubuntu", "centos", "debian"] },
-  { slug: "networking", name: "Networking", category: "networking", aliases: ["tcp/ip", "dns", "load balancing", "vpc"] },
+  {
+    slug: "linux",
+    name: "Linux",
+    category: "os",
+    aliases: ["unix", "rhel", "ubuntu", "centos", "debian"],
+  },
+  {
+    slug: "networking",
+    name: "Networking",
+    category: "networking",
+    aliases: ["tcp/ip", "dns", "load balancing", "vpc"],
+  },
   { slug: "nginx", name: "NGINX", category: "networking", aliases: ["reverse proxy"] },
 
   // Frameworks
@@ -125,12 +200,37 @@ export const SKILL_TAXONOMY: CanonicalSkill[] = [
   { slug: "spring", name: "Spring", category: "framework", aliases: ["spring boot"] },
 
   // Practices
-  { slug: "ci-cd", name: "CI/CD", category: "practice", aliases: ["continuous integration", "continuous delivery", "continuous deployment"] },
-  { slug: "sre", name: "SRE", category: "practice", aliases: ["site reliability engineering", "slo", "sli", "error budget"] },
+  {
+    slug: "ci-cd",
+    name: "CI/CD",
+    category: "practice",
+    aliases: ["continuous integration", "continuous delivery", "continuous deployment"],
+  },
+  {
+    slug: "sre",
+    name: "SRE",
+    category: "practice",
+    aliases: ["site reliability engineering", "slo", "sli", "error budget"],
+  },
   { slug: "agile", name: "Agile", category: "practice", aliases: ["scrum", "kanban"] },
-  { slug: "microservices", name: "Microservices", category: "practice", aliases: ["microservice architecture"] },
-  { slug: "system-design", name: "System Design", category: "practice", aliases: ["distributed systems", "high availability"] },
-  { slug: "incident-management", name: "Incident Management", category: "practice", aliases: ["incident response", "postmortem", "post-mortem"] },
+  {
+    slug: "microservices",
+    name: "Microservices",
+    category: "practice",
+    aliases: ["microservice architecture"],
+  },
+  {
+    slug: "system-design",
+    name: "System Design",
+    category: "practice",
+    aliases: ["distributed systems", "high availability"],
+  },
+  {
+    slug: "incident-management",
+    name: "Incident Management",
+    category: "practice",
+    aliases: ["incident response", "postmortem", "post-mortem"],
+  },
 ];
 
 export const SKILL_BY_SLUG = new Map(SKILL_TAXONOMY.map((s) => [s.slug, s]));

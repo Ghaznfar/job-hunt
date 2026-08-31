@@ -76,7 +76,11 @@ afterAll(async () => {
 describe("analyzeMatch (end to end, mock AI)", () => {
   it("persists a JobMatch with a verdict, dimension scores and recommendation", async () => {
     const gbRemote = await testDb.job.findFirst({
-      where: { country: "GB", workArrangement: { in: ["REMOTE", "HYBRID"] }, title: { contains: "DevOps" } },
+      where: {
+        country: "GB",
+        workArrangement: { in: ["REMOTE", "HYBRID"] },
+        title: { contains: "DevOps" },
+      },
     });
     expect(gbRemote).toBeTruthy();
 
@@ -114,9 +118,12 @@ describe("analyzeMatch (end to end, mock AI)", () => {
     const before = await testDb.usageCounter.findFirst({
       where: { userId, feature: "JOB_MATCH" },
     });
-    const job = await testDb.job.findFirst({ where: { country: "GB" }, orderBy: { createdAt: "desc" } });
+    const job = await testDb.job.findFirst({
+      where: { country: "GB" },
+      orderBy: { createdAt: "desc" },
+    });
     await analyzeMatch(userId, job!.id);
     const after = await testDb.usageCounter.findFirst({ where: { userId, feature: "JOB_MATCH" } });
-    expect((after?.count ?? 0)).toBeGreaterThan(before?.count ?? 0);
+    expect(after?.count ?? 0).toBeGreaterThan(before?.count ?? 0);
   });
 });

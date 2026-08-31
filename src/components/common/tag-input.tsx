@@ -51,7 +51,7 @@ export function TagInput({
 
   return (
     <div className={className}>
-      <div className="flex min-h-9 flex-wrap items-center gap-1.5 rounded-md border border-input bg-transparent px-2 py-1.5">
+      <div className="border-input flex min-h-9 flex-wrap items-center gap-1.5 rounded-md border bg-transparent px-2 py-1.5">
         {value.map((tag) => (
           <Badge key={tag} variant="secondary" className="gap-1">
             {tag}
@@ -66,7 +66,7 @@ export function TagInput({
           onKeyDown={onKeyDown}
           onBlur={() => draft && add(draft)}
           placeholder={value.length === 0 ? placeholder : ""}
-          className="flex-1 border-0 bg-transparent px-1 py-0.5 text-sm outline-none placeholder:text-muted-foreground"
+          className="placeholder:text-muted-foreground flex-1 border-0 bg-transparent px-1 py-0.5 text-sm outline-none"
         />
       </div>
       {filteredSuggestions.length > 0 ? (
@@ -77,7 +77,7 @@ export function TagInput({
               type="button"
               onClick={() => add(s)}
               className={cn(
-                "rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                "text-muted-foreground hover:bg-accent hover:text-foreground rounded-full border px-2.5 py-0.5 text-xs transition-colors",
               )}
             >
               + {s}

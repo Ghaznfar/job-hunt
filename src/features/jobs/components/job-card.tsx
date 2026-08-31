@@ -38,7 +38,7 @@ export function JobCard({ job }: { job: JobCardData }) {
             <Link href={`/dashboard/jobs/${job.id}`} className="block">
               <h3 className="truncate font-semibold hover:underline">{job.title}</h3>
             </Link>
-            <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-sm">
               <Building2 className="size-3.5" />
               {job.company}
             </p>
@@ -46,7 +46,7 @@ export function JobCard({ job }: { job: JobCardData }) {
           <SaveButton jobId={job.id} initialSaved={job.isSaved} size="icon" />
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+        <div className="text-muted-foreground mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1">
             <MapPin className="size-3.5" />
             {job.location || job.country} · {ARRANGEMENT_LABEL[job.workArrangement]}
@@ -71,7 +71,7 @@ export function JobCard({ job }: { job: JobCardData }) {
             </Badge>
           ))}
           {job.jobSkills.length > 6 ? (
-            <span className="text-xs text-muted-foreground">+{job.jobSkills.length - 6}</span>
+            <span className="text-muted-foreground text-xs">+{job.jobSkills.length - 6}</span>
           ) : null}
         </div>
 

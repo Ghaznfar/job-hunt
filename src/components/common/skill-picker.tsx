@@ -41,9 +41,7 @@ export function SkillPicker({
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }, [options, query]);
 
-  const exactExists = options.some(
-    (o) => o.name.toLowerCase() === query.trim().toLowerCase(),
-  );
+  const exactExists = options.some((o) => o.name.toLowerCase() === query.trim().toLowerCase());
   const canAddCustom =
     query.trim().length >= 2 &&
     !exactExists &&
@@ -77,7 +75,7 @@ export function SkillPicker({
           <button
             type="button"
             onClick={addCustom}
-            className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border px-3 text-sm hover:bg-accent"
+            className="hover:bg-accent inline-flex items-center gap-1 rounded-md border px-3 text-sm whitespace-nowrap"
           >
             <Plus className="size-3.5" /> Add &ldquo;{query.trim()}&rdquo;
           </button>
@@ -115,7 +113,7 @@ export function SkillPicker({
       <div className="max-h-64 space-y-3 overflow-y-auto rounded-md border p-3">
         {grouped.map(([category, items]) => (
           <div key={category}>
-            <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <p className="text-muted-foreground mb-1.5 text-xs font-medium tracking-wide uppercase">
               {category}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -139,7 +137,9 @@ export function SkillPicker({
           </div>
         ))}
         {grouped.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No matching skills. Use &ldquo;Add&rdquo; above.</p>
+          <p className="text-muted-foreground text-sm">
+            No matching skills. Use &ldquo;Add&rdquo; above.
+          </p>
         ) : null}
       </div>
     </div>

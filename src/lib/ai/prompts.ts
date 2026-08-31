@@ -103,7 +103,9 @@ Produce JSON: { "content": "<the letter as plain text with paragraph breaks>" }`
       system: `You analyse skill gaps for a job seeker. ${JSON_ONLY}`,
       user: `Target roles: ${targetTitles.join(", ")}\nSkill demand across matching jobs (skill: count): ${freqs
         .map((f) => `${f.skill}:${f.count}`)
-        .join(", ")}\nCandidate's current skills: ${userSkills.join(", ")}\n\nProduce JSON: topSkills[] (skill, demand 0-100 relative, haveIt boolean), summary (2-3 sentences on what to learn next and why).`,
+        .join(
+          ", ",
+        )}\nCandidate's current skills: ${userSkills.join(", ")}\n\nProduce JSON: topSkills[] (skill, demand 0-100 relative, haveIt boolean), summary (2-3 sentences on what to learn next and why).`,
     };
   },
 };

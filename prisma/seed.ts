@@ -83,7 +83,9 @@ async function seedUsers() {
     },
   });
 
-  console.log(`  ✓ users: ${admin.email} (ADMIN, pw: password123), ${demo.email} (FREE, pw: password123)`);
+  console.log(
+    `  ✓ users: ${admin.email} (ADMIN, pw: password123), ${demo.email} (FREE, pw: password123)`,
+  );
 }
 
 async function seedJobs() {

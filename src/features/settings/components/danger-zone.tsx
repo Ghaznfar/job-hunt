@@ -56,7 +56,7 @@ export function DangerZone() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium">Export your data</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Download everything we hold about you as JSON.
             </p>
           </div>
@@ -69,7 +69,7 @@ export function DangerZone() {
         <div className="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium">Delete account</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Permanently removes your account, CVs, applications and AI results. This cannot be
               undone.
             </p>

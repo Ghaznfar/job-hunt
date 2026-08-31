@@ -12,10 +12,12 @@ export default async function ResetPasswordPage({
   const { token } = await searchParams;
   if (!token) {
     return (
-      <div className="space-y-3 rounded-xl border bg-card p-6 text-center shadow-sm">
+      <div className="bg-card space-y-3 rounded-xl border p-6 text-center shadow-sm">
         <h1 className="text-lg font-semibold">Invalid link</h1>
-        <p className="text-sm text-muted-foreground">This password reset link is missing its token.</p>
-        <Link href="/forgot-password" className="text-sm text-foreground hover:underline">
+        <p className="text-muted-foreground text-sm">
+          This password reset link is missing its token.
+        </p>
+        <Link href="/forgot-password" className="text-foreground text-sm hover:underline">
           Request a new link
         </Link>
       </div>

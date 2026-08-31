@@ -4,12 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, Trash2, ExternalLink } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -101,14 +96,18 @@ export function ApplicationDetailDialog({
                   <Label className="text-xs">Company</Label>
                   <Input
                     defaultValue={data.company}
-                    onBlur={(e) => e.target.value !== data.company && saveField({ company: e.target.value })}
+                    onBlur={(e) =>
+                      e.target.value !== data.company && saveField({ company: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-1">
                   <Label className="text-xs">Job title</Label>
                   <Input
                     defaultValue={data.title}
-                    onBlur={(e) => e.target.value !== data.title && saveField({ title: e.target.value })}
+                    onBlur={(e) =>
+                      e.target.value !== data.title && saveField({ title: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -228,9 +227,9 @@ export function ApplicationDetailDialog({
                 </div>
                 <ul className="space-y-1.5">
                   {data.notes.map((n) => (
-                    <li key={n.id} className="rounded-md border bg-muted/30 p-2 text-sm">
+                    <li key={n.id} className="bg-muted/30 rounded-md border p-2 text-sm">
                       <p className="whitespace-pre-wrap">{n.body}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
+                      <p className="text-muted-foreground mt-0.5 text-xs">
                         {relativeDate(n.createdAt)}
                       </p>
                     </li>
@@ -242,7 +241,7 @@ export function ApplicationDetailDialog({
               {data.events.length > 0 ? (
                 <div className="space-y-1">
                   <Label className="text-xs">History</Label>
-                  <ul className="space-y-1 text-xs text-muted-foreground">
+                  <ul className="text-muted-foreground space-y-1 text-xs">
                     {data.events.map((e, i) => (
                       <li key={i}>
                         {e.fromStatus ? `${STATUS_LABEL[e.fromStatus]} → ` : "Created as "}
@@ -255,7 +254,7 @@ export function ApplicationDetailDialog({
 
               <div className="flex justify-between border-t pt-3">
                 {pending ? (
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <span className="text-muted-foreground flex items-center gap-1 text-xs">
                     <Loader2 className="size-3 animate-spin" /> Saving…
                   </span>
                 ) : (

@@ -34,7 +34,7 @@ export function ApplicationCard({
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={cn(
-        "group rounded-lg border bg-card p-3 text-sm shadow-sm",
+        "group bg-card rounded-lg border p-3 text-sm shadow-sm",
         isDragging && "opacity-40",
         overlay && "rotate-2 shadow-lg",
       )}
@@ -46,13 +46,13 @@ export function ApplicationCard({
           type="button"
         >
           <p className="truncate font-medium">{card.title}</p>
-          <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-0.5 flex items-center gap-1 truncate text-xs">
             <Building2 className="size-3" />
             {card.company}
           </p>
         </button>
         <button
-          className="cursor-grab touch-none text-muted-foreground opacity-0 group-hover:opacity-100"
+          className="text-muted-foreground cursor-grab touch-none opacity-0 group-hover:opacity-100"
           {...attributes}
           {...listeners}
           aria-label="Drag"
@@ -62,7 +62,7 @@ export function ApplicationCard({
         </button>
       </div>
       {(card.salary || card.nextInterviewAt || card.noteCount > 0) && (
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <div className="text-muted-foreground mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           {card.salary ? <span>{card.salary}</span> : null}
           {card.nextInterviewAt ? (
             <span className="flex items-center gap-1">

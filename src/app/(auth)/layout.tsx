@@ -9,13 +9,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Logo />
         </div>
         {children}
-        <p className="mt-8 text-center text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-8 text-center text-xs">
           By continuing you agree to our{" "}
-          <Link href="/legal/terms" className="underline hover:text-foreground">
+          <Link href="/legal/terms" className="hover:text-foreground underline">
             Terms
           </Link>{" "}
           and{" "}
-          <Link href="/legal/privacy" className="underline hover:text-foreground">
+          <Link href="/legal/privacy" className="hover:text-foreground underline">
             Privacy Policy
           </Link>
           .

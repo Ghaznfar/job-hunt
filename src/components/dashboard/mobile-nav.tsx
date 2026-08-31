@@ -13,7 +13,7 @@ export function MobileNav() {
       <DialogTrigger className="md:hidden" aria-label="Open menu">
         <Menu className="size-5" />
       </DialogTrigger>
-      <DialogContent className="left-0 top-0 h-full max-w-[17rem] translate-x-0 translate-y-0 rounded-none border-r p-4 sm:rounded-none">
+      <DialogContent className="top-0 left-0 h-full max-w-[17rem] translate-x-0 translate-y-0 rounded-none border-r p-4 sm:rounded-none">
         <DialogTitle className="sr-only">Navigation</DialogTitle>
         <div className="mb-6">
           <Logo href="/dashboard" />

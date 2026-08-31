@@ -27,7 +27,7 @@ export function UserMenu({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <DropdownMenuTrigger className="focus-visible:ring-ring rounded-full outline-none focus-visible:ring-2">
         <Avatar>
           {image ? <AvatarImage src={image} alt={name ?? email} /> : null}
           <AvatarFallback>{initials(name, email)}</AvatarFallback>
@@ -36,7 +36,7 @@ export function UserMenu({
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="truncate font-medium">{name ?? "Account"}</div>
-          <div className="truncate text-xs font-normal text-muted-foreground">{email}</div>
+          <div className="text-muted-foreground truncate text-xs font-normal">{email}</div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

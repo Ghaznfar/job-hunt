@@ -8,9 +8,7 @@ const clamp = (n: number, lo = 0, hi = 100) => Math.max(lo, Math.min(hi, Math.ro
 
 export function scoreTechnical(candidate: CandidateInput, job: JobInput) {
   const required = job.requiredSkillSlugs;
-  const preferred = job.preferredSkillSlugs.filter(
-    (p) => !required.some((r) => r.slug === p.slug),
-  );
+  const preferred = job.preferredSkillSlugs.filter((p) => !required.some((r) => r.slug === p.slug));
 
   const skillScores: SkillScore[] = [];
   const add = (list: typeof required, importance: "REQUIRED" | "PREFERRED") => {
@@ -71,10 +69,16 @@ export function scoreExperience(candidate: CandidateInput, job: JobInput) {
     return { score: years == null ? 70 : 80, note: "No explicit experience requirement stated." };
   }
   if (years == null) {
-    return { score: 55, note: "Add your years of experience to your profile for an accurate score." };
+    return {
+      score: 55,
+      note: "Add your years of experience to your profile for an accurate score.",
+    };
   }
   if (years >= min && (max == null || years <= max)) {
-    return { score: 100, note: `Your ${years} years is within the required ${min}${max ? `–${max}` : "+"} years.` };
+    return {
+      score: 100,
+      note: `Your ${years} years is within the required ${min}${max ? `–${max}` : "+"} years.`,
+    };
   }
   if (years < min) {
     const gap = min - years;
@@ -143,18 +147,29 @@ export function scoreSalary(candidate: CandidateInput, job: JobInput) {
   if (!want || !offer) {
     return { score: 75, note: "Not enough salary information to compare." };
   }
-  if (candidate.salaryCurrency && job.salaryCurrency && candidate.salaryCurrency !== job.salaryCurrency) {
+  if (
+    candidate.salaryCurrency &&
+    job.salaryCurrency &&
+    candidate.salaryCurrency !== job.salaryCurrency
+  ) {
     return {
       score: 70,
       note: `Salary is in ${job.salaryCurrency}; your expectation is in ${candidate.salaryCurrency}. Compare manually.`,
     };
   }
-  if (offer >= want) return { score: 100, note: "The salary range meets or exceeds your expectation." };
+  if (offer >= want)
+    return { score: 100, note: "The salary range meets or exceeds your expectation." };
   const ratio = offer / want;
   if (ratio >= 0.85) {
-    return { score: clamp(70 + (ratio - 0.85) * 200), note: "Slightly below your expectation but negotiable." };
+    return {
+      score: clamp(70 + (ratio - 0.85) * 200),
+      note: "Slightly below your expectation but negotiable.",
+    };
   }
-  return { score: clamp(Math.max(20, ratio * 100)), note: "The salary is meaningfully below your expectation." };
+  return {
+    score: clamp(Math.max(20, ratio * 100)),
+    note: "The salary is meaningfully below your expectation.",
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -194,8 +209,10 @@ export function scoreSeniority(candidate: CandidateInput, job: JobInput) {
   const diff = jobRank - userRank;
   if (diff === 0) return { score: 100, note: "Your level matches the role." };
   if (diff === -1) return { score: 85, note: "You're slightly above this level — usually fine." };
-  if (diff <= -2) return { score: 72, note: "You're well above this level; it may feel like a step back." };
-  if (diff === 1) return { score: 68, note: "This is one level above where you are now — a stretch." };
+  if (diff <= -2)
+    return { score: 72, note: "You're well above this level; it may feel like a step back." };
+  if (diff === 1)
+    return { score: 68, note: "This is one level above where you are now — a stretch." };
   return { score: 38, note: "This role is well above your current level." };
 }
 
@@ -230,13 +247,15 @@ export function scoreEligibility(candidate: CandidateInput, job: JobInput) {
       flags.sponsorshipBlocked = true;
     } else {
       score = 35;
-      note = "You'd need sponsorship and the posting doesn't say whether it's available — verify before applying.";
+      note =
+        "You'd need sponsorship and the posting doesn't say whether it's available — verify before applying.";
       flags.eligibilityUncertain = true;
     }
   } else if (status === "NONE") {
     if (sponsor === "YES") {
       score = 45;
-      note = "You're not currently authorized here; sponsorship is offered but this is a significant hurdle.";
+      note =
+        "You're not currently authorized here; sponsorship is offered but this is a significant hurdle.";
     } else if (sponsor === "NO") {
       score = 3;
       note = "You're not authorized to work here and no sponsorship is offered.";

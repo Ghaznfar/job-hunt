@@ -19,7 +19,7 @@ export default async function AdminSubscriptionsPage() {
     <div className="space-y-4">
       <div className="flex items-baseline justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Subscriptions</h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {pro} Pro · {subs.length - pro} Free
         </p>
       </div>
@@ -37,7 +37,7 @@ export default async function AdminSubscriptionsPage() {
           <TableBody>
             {subs.map((s) => (
               <TableRow key={s.id}>
-                <TableCell className="text-xs text-muted-foreground">{s.user.email}</TableCell>
+                <TableCell className="text-muted-foreground text-xs">{s.user.email}</TableCell>
                 <TableCell>
                   <Badge variant={s.plan === "PRO" ? "default" : "secondary"}>{s.plan}</Badge>
                 </TableCell>
@@ -49,10 +49,10 @@ export default async function AdminSubscriptionsPage() {
                     </Badge>
                   ) : null}
                 </TableCell>
-                <TableCell className="text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground text-xs">
                   {s.currentPeriodEnd ? s.currentPeriodEnd.toLocaleDateString() : "—"}
                 </TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground font-mono text-xs">
                   {s.stripeCustomerId ?? "—"}
                 </TableCell>
               </TableRow>

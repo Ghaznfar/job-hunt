@@ -40,12 +40,20 @@ export interface ProfileFormState {
 
 type Patch = (p: Partial<ProfileFormState>) => void;
 
-function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
+function Field({
+  label,
+  children,
+  hint,
+}: {
+  label: string;
+  children: React.ReactNode;
+  hint?: string;
+}) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       {children}
-      {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-muted-foreground text-xs">{hint}</p> : null}
     </div>
   );
 }
@@ -165,10 +173,7 @@ export function CareerFields({ state, patch }: { state: ProfileFormState; patch:
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Work preference">
-          <Select
-            value={state.workPreference}
-            onValueChange={(v) => patch({ workPreference: v })}
-          >
+          <Select value={state.workPreference} onValueChange={(v) => patch({ workPreference: v })}>
             <SelectTrigger>
               <SelectValue placeholder="Select" />
             </SelectTrigger>
@@ -191,10 +196,7 @@ export function CareerFields({ state, patch }: { state: ProfileFormState; patch:
           />
         </Field>
         <Field label="Currency">
-          <Select
-            value={state.salaryCurrency}
-            onValueChange={(v) => patch({ salaryCurrency: v })}
-          >
+          <Select value={state.salaryCurrency} onValueChange={(v) => patch({ salaryCurrency: v })}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -215,7 +217,7 @@ export function CareerFields({ state, patch }: { state: ProfileFormState; patch:
 export function EligibilityFields({ state, patch }: { state: ProfileFormState; patch: Patch }) {
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         This is used to flag jobs you can&apos;t realistically get — for example roles that require
         work authorization you don&apos;t have, or that don&apos;t offer visa sponsorship.
       </p>

@@ -20,7 +20,10 @@ afterAll(async () => {
 beforeEach(async () => {
   await testDb.user.deleteMany();
   const f = await testDb.user.create({
-    data: { email: "free@example.com", subscription: { create: { plan: "FREE", status: "ACTIVE" } } },
+    data: {
+      email: "free@example.com",
+      subscription: { create: { plan: "FREE", status: "ACTIVE" } },
+    },
   });
   const p = await testDb.user.create({
     data: { email: "pro@example.com", subscription: { create: { plan: "PRO", status: "ACTIVE" } } },

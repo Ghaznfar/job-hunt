@@ -14,7 +14,10 @@ export const metadata: Metadata = {
 };
 
 const faqs = [
-  ["Can I cancel anytime?", "Yes. Cancel from Settings → Billing; you keep Pro until the end of the paid period."],
+  [
+    "Can I cancel anytime?",
+    "Yes. Cancel from Settings → Billing; you keep Pro until the end of the paid period.",
+  ],
   ["Do limits reset?", "Free plan limits reset on the 1st of each month."],
   ["What payment methods?", "All major cards via Stripe. Billing runs in test mode until launch."],
 ];
@@ -24,7 +27,7 @@ export default function PricingPage() {
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-4xl font-bold tracking-tight">Simple pricing</h1>
-        <p className="mt-4 text-muted-foreground">
+        <p className="text-muted-foreground mt-4">
           Start free. Upgrade when your search gets serious. No contracts.
         </p>
       </div>
@@ -42,13 +45,13 @@ export default function PricingPage() {
                 </div>
                 <div>
                   <span className="text-4xl font-bold">{plan.price}</span>{" "}
-                  <span className="text-sm text-muted-foreground">{plan.cadence}</span>
+                  <span className="text-muted-foreground text-sm">{plan.cadence}</span>
                 </div>
-                <p className="text-sm text-muted-foreground">{plan.blurb}</p>
+                <p className="text-muted-foreground text-sm">{plan.blurb}</p>
                 <ul className="space-y-2 text-sm">
                   {plan.features.map((f) => (
                     <li key={f} className="flex gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-success" />
+                      <Check className="text-success mt-0.5 size-4 shrink-0" />
                       {f}
                     </li>
                   ))}
@@ -68,7 +71,7 @@ export default function PricingPage() {
           {faqs.map(([q, a]) => (
             <div key={q} className="py-4">
               <p className="font-medium">{q}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{a}</p>
+              <p className="text-muted-foreground mt-1 text-sm">{a}</p>
             </div>
           ))}
         </div>

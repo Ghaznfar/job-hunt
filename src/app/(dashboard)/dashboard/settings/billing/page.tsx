@@ -29,10 +29,7 @@ export default async function BillingPage({
 }) {
   const user = await requireUser();
   const { checkout } = await searchParams;
-  const [overview, usage] = await Promise.all([
-    getBillingOverview(user.id),
-    getAllUsage(user.id),
-  ]);
+  const [overview, usage] = await Promise.all([getBillingOverview(user.id), getAllUsage(user.id)]);
   const isPro = overview.plan === "PRO";
 
   return (
@@ -48,7 +45,9 @@ export default async function BillingPage({
         </Alert>
       ) : checkout === "cancelled" ? (
         <Alert>
-          <AlertDescription>Checkout cancelled. You&apos;re still on the Free plan.</AlertDescription>
+          <AlertDescription>
+            Checkout cancelled. You&apos;re still on the Free plan.
+          </AlertDescription>
         </Alert>
       ) : null}
 
@@ -70,7 +69,7 @@ export default async function BillingPage({
         <CardContent className="space-y-4">
           {isPro ? (
             <>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {overview.cancelAtPeriodEnd
                   ? `Your Pro plan ends on ${overview.currentPeriodEnd?.toLocaleDateString()}.`
                   : overview.currentPeriodEnd
@@ -81,9 +80,9 @@ export default async function BillingPage({
             </>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground">
-                Upgrade to unlock CV tailoring, cover letters, interview prep, skill-gap analysis and
-                much higher AI limits.
+              <p className="text-muted-foreground text-sm">
+                Upgrade to unlock CV tailoring, cover letters, interview prep, skill-gap analysis
+                and much higher AI limits.
               </p>
               <UpgradeButton devBypass={overview.devBypass} />
             </>
@@ -101,13 +100,19 @@ export default async function BillingPage({
               <div className="mb-1 flex justify-between text-sm">
                 <span>
                   {FEATURE_LABEL[u.feature] ?? u.feature}
-                  {u.locked ? <Badge variant="outline" className="ml-2 text-[10px]">Pro</Badge> : null}
+                  {u.locked ? (
+                    <Badge variant="outline" className="ml-2 text-[10px]">
+                      Pro
+                    </Badge>
+                  ) : null}
                 </span>
                 <span className="text-muted-foreground">
                   {u.locked ? "—" : `${u.used} / ${u.limit}`}
                 </span>
               </div>
-              <Progress value={u.locked ? 0 : Math.min(100, (u.used / Math.max(u.limit, 1)) * 100)} />
+              <Progress
+                value={u.locked ? 0 : Math.min(100, (u.used / Math.max(u.limit, 1)) * 100)}
+              />
             </div>
           ))}
         </CardContent>
@@ -122,7 +127,7 @@ export default async function BillingPage({
             <ul className="grid gap-2 text-sm sm:grid-cols-2">
               {PRICING_COPY.PRO.features.map((f) => (
                 <li key={f} className="flex gap-2">
-                  <Check className="mt-0.5 size-4 shrink-0 text-success" />
+                  <Check className="text-success mt-0.5 size-4 shrink-0" />
                   {f}
                 </li>
               ))}
@@ -131,8 +136,12 @@ export default async function BillingPage({
         </Card>
       ) : null}
 
-      <p className="text-xs text-muted-foreground">
-        Full plan comparison is on the <Link href="/pricing" className="underline">pricing page</Link>.
+      <p className="text-muted-foreground text-xs">
+        Full plan comparison is on the{" "}
+        <Link href="/pricing" className="underline">
+          pricing page
+        </Link>
+        .
       </p>
     </div>
   );

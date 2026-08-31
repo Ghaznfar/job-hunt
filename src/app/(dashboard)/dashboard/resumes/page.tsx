@@ -42,12 +42,12 @@ export default async function ResumesPage() {
       />
 
       {usage.remaining <= 0 ? (
-        <p className="mb-4 rounded-md border border-warning/40 bg-warning/10 px-3 py-2 text-sm">
+        <p className="border-warning/40 bg-warning/10 mb-4 rounded-md border px-3 py-2 text-sm">
           You&apos;ve used all {usage.limit} CV analyses this month. Uploading a new CV is paused
           until the 1st, or upgrade to Pro.
         </p>
       ) : (
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mb-4 text-sm">
           {usage.remaining} of {usage.limit} CV analyses left this month.
         </p>
       )}

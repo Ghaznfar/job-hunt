@@ -8,10 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { relativeDate } from "@/lib/utils";
-import {
-  updateCoverLetterAction,
-  deleteCoverLetterAction,
-} from "@/features/cover-letters/actions";
+import { updateCoverLetterAction, deleteCoverLetterAction } from "@/features/cover-letters/actions";
 
 interface Item {
   id: string;
@@ -36,7 +33,7 @@ export function CoverLetterList({ items }: { items: Item[] }) {
               <CardTitle className="text-base">
                 {it.job.title} — {it.job.company}
               </CardTitle>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 {it.tone} · updated {relativeDate(it.updatedAt)}
               </p>
             </div>
@@ -89,7 +86,11 @@ export function CoverLetterList({ items }: { items: Item[] }) {
                       })
                     }
                   >
-                    {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                    {pending ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Save className="size-4" />
+                    )}
                     Save
                   </Button>
                   <Button size="sm" variant="ghost" onClick={() => setEditing(null)}>
@@ -99,7 +100,7 @@ export function CoverLetterList({ items }: { items: Item[] }) {
               </div>
             ) : (
               <>
-                <p className="whitespace-pre-wrap font-serif text-sm leading-relaxed text-foreground/90">
+                <p className="text-foreground/90 font-serif text-sm leading-relaxed whitespace-pre-wrap">
                   {it.content}
                 </p>
                 <Button

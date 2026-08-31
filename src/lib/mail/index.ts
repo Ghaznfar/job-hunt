@@ -23,7 +23,10 @@ class ConsoleMailer implements Mailer {
 }
 
 class ResendMailer implements Mailer {
-  constructor(private readonly apiKey: string, private readonly from: string) {}
+  constructor(
+    private readonly apiKey: string,
+    private readonly from: string,
+  ) {}
 
   async send(message: MailMessage): Promise<void> {
     const res = await fetch("https://api.resend.com/emails", {

@@ -45,7 +45,13 @@ beforeAll(async () => {
     data: {
       email: "tc@example.com",
       subscription: { create: { plan: "PRO", status: "ACTIVE" } },
-      profile: { create: { currentTitle: "DevOps Engineer", yearsExperience: 3, onboardingCompletedAt: new Date() } },
+      profile: {
+        create: {
+          currentTitle: "DevOps Engineer",
+          yearsExperience: 3,
+          onboardingCompletedAt: new Date(),
+        },
+      },
     },
   });
   userId = user.id;
@@ -154,7 +160,9 @@ describe("cover letters", () => {
     expect(coverLetter.jobId).toBe(jobId);
     expect(coverLetter.content).toContain("Acme");
 
-    const usage = await testDb.usageCounter.findFirst({ where: { userId, feature: "COVER_LETTER" } });
+    const usage = await testDb.usageCounter.findFirst({
+      where: { userId, feature: "COVER_LETTER" },
+    });
     expect(usage?.count).toBeGreaterThanOrEqual(1);
   });
 });

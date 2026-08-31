@@ -52,7 +52,10 @@ function experienceOverlap(band: string): Prisma.JobWhereInput | null {
         AND: [
           { minYearsRequired: { lte: hi } },
           {
-            OR: [{ maxYearsRequired: null, minYearsRequired: { gte: lo - 2 } }, { maxYearsRequired: { gte: lo } }],
+            OR: [
+              { maxYearsRequired: null, minYearsRequired: { gte: lo - 2 } },
+              { maxYearsRequired: { gte: lo } },
+            ],
           },
         ],
       },
@@ -76,7 +79,9 @@ export function buildJobWhere(input: JobSearchInput): Prisma.JobWhereInput {
   if (input.remote !== "any") and.push({ workArrangement: input.remote });
   if (input.seniority !== "any") and.push({ seniorityLevel: input.seniority });
   if (input.salaryMin && input.salaryMin > 0) {
-    and.push({ OR: [{ salaryMax: { gte: input.salaryMin } }, { salaryMin: { gte: input.salaryMin } }] });
+    and.push({
+      OR: [{ salaryMax: { gte: input.salaryMin } }, { salaryMin: { gte: input.salaryMin } }],
+    });
   }
   if (input.datePosted !== "any") {
     const days = Number(input.datePosted);
@@ -97,7 +102,9 @@ export function buildJobWhere(input: JobSearchInput): Prisma.JobWhereInput {
 }
 
 /** Parse URLSearchParams-shaped record into a validated JobSearchInput. */
-export function parseSearchParams(sp: Record<string, string | string[] | undefined>): JobSearchInput {
+export function parseSearchParams(
+  sp: Record<string, string | string[] | undefined>,
+): JobSearchInput {
   const skills = sp.skills
     ? Array.isArray(sp.skills)
       ? sp.skills

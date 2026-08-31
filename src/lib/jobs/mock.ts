@@ -99,8 +99,22 @@ const COMPANIES = [
   { name: "Blue Harbor Bank", domain: "blueharborbank.com" },
 ];
 
-const US_CITIES = ["New York, NY", "Austin, TX", "Seattle, WA", "Denver, CO", "Remote (US)", "Boston, MA"];
-const GB_CITIES = ["London, UK", "Manchester, UK", "Edinburgh, UK", "Bristol, UK", "Remote (UK)", "Leeds, UK"];
+const US_CITIES = [
+  "New York, NY",
+  "Austin, TX",
+  "Seattle, WA",
+  "Denver, CO",
+  "Remote (US)",
+  "Boston, MA",
+];
+const GB_CITIES = [
+  "London, UK",
+  "Manchester, UK",
+  "Edinburgh, UK",
+  "Bristol, UK",
+  "Remote (UK)",
+  "Leeds, UK",
+];
 
 const REMOTE_CLAUSES = [
   "This is a fully remote role open to candidates across the country.",
@@ -117,7 +131,11 @@ const SPONSOR_CLAUSES = [
 ];
 
 const AUTH_CLAUSES: Record<string, string[]> = {
-  US: ["You must be authorized to work in the United States.", "", "US citizenship is required due to client contracts."],
+  US: [
+    "You must be authorized to work in the United States.",
+    "",
+    "US citizenship is required due to client contracts.",
+  ],
   GB: ["You must have the right to work in the UK.", "", ""],
 };
 
@@ -125,12 +143,16 @@ function pick<T>(arr: T[], n: number): T {
   return arr[n % arr.length];
 }
 
-function buildDescription(t: Template, sen: { label: string; years: string }, opts: {
-  company: string;
-  remote: string;
-  sponsor: string;
-  auth: string;
-}) {
+function buildDescription(
+  t: Template,
+  sen: { label: string; years: string },
+  opts: {
+    company: string;
+    remote: string;
+    sponsor: string;
+    auth: string;
+  },
+) {
   return `${opts.company} is hiring a ${sen.label}${t.titles[0]} to join our engineering team.
 
 About the role

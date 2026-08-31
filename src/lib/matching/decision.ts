@@ -31,7 +31,8 @@ export function decideVerdict(result: RuleMatchResult): DecisionResult {
   }
   if (scores.experience >= 80) reasons.push(notes.experience ?? "Your experience is in range.");
   if (scores.eligibility >= 90) reasons.push("You're authorized to work here without sponsorship.");
-  if (scores.location >= 85) reasons.push(notes.location ?? "Location and work arrangement suit you.");
+  if (scores.location >= 85)
+    reasons.push(notes.location ?? "Location and work arrangement suit you.");
   if (scores.salary >= 90) reasons.push("The salary meets your expectation.");
   if (scores.seniority === 100) reasons.push("The role is pitched at your level.");
 
@@ -48,7 +49,8 @@ export function decideVerdict(result: RuleMatchResult): DecisionResult {
   }
   (Object.keys(DIMENSION_LABELS) as (keyof typeof DIMENSION_LABELS)[]).forEach((k) => {
     if (k === "technical" && missingSkills.length) return; // already covered
-    if (scores[k] < 55) concerns.push(notes[k] ?? `${DIMENSION_LABELS[k]} is weak (${scores[k]}%).`);
+    if (scores[k] < 55)
+      concerns.push(notes[k] ?? `${DIMENSION_LABELS[k]} is weak (${scores[k]}%).`);
   });
 
   // ---- Hard blockers --------------------------------------------------
@@ -56,7 +58,9 @@ export function decideVerdict(result: RuleMatchResult): DecisionResult {
   if (flags.sponsorshipBlocked || flags.notWorkAuthorized) {
     verdict = "DONT_APPLY";
     if (!concerns.some((c) => /authoriz|sponsor/i.test(c))) {
-      concerns.unshift(notes.eligibility ?? "You are not eligible to work in this role's location.");
+      concerns.unshift(
+        notes.eligibility ?? "You are not eligible to work in this role's location.",
+      );
     }
   } else if (flags.severelyUnderExperienced) {
     verdict = "DONT_APPLY";

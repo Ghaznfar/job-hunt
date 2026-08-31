@@ -41,10 +41,13 @@ export async function ensureJobAnalyzed(jobId: string): Promise<Job | null> {
               : data.seniorityLevel,
         workArrangement:
           job.workArrangement === "UNKNOWN" ? data.workArrangement : job.workArrangement,
-        requiresWorkAuthorization:
-          job.requiresWorkAuthorization.length ? job.requiresWorkAuthorization : data.requiresWorkAuthorization,
+        requiresWorkAuthorization: job.requiresWorkAuthorization.length
+          ? job.requiresWorkAuthorization
+          : data.requiresWorkAuthorization,
         sponsorshipAvailable:
-          job.sponsorshipAvailable === "UNKNOWN" ? data.sponsorshipAvailable : job.sponsorshipAvailable,
+          job.sponsorshipAvailable === "UNKNOWN"
+            ? data.sponsorshipAvailable
+            : job.sponsorshipAvailable,
         extractionConfidence: data.confidence,
         analyzedAt: new Date(),
       },
@@ -52,15 +55,21 @@ export async function ensureJobAnalyzed(jobId: string): Promise<Job | null> {
 
     // Add any AI-found skills that the rule extractor missed.
     const known = new Set(
-      (await prisma.jobSkill.findMany({ where: { jobId }, select: { skill: { select: { slug: true } } } })).map(
-        (r) => r.skill.slug,
-      ),
+      (
+        await prisma.jobSkill.findMany({
+          where: { jobId },
+          select: { skill: { select: { slug: true } } },
+        })
+      ).map((r) => r.skill.slug),
     );
     const extra = [...data.requiredSkills, ...data.preferredSkills]
       .map((name) => ({ name, canonical: resolveSkill(name) }))
       .filter((s) => s.canonical && !known.has(s.canonical.slug));
     for (const s of extra) {
-      const skill = await prisma.skill.findUnique({ where: { slug: s.canonical!.slug }, select: { id: true } });
+      const skill = await prisma.skill.findUnique({
+        where: { slug: s.canonical!.slug },
+        select: { id: true },
+      });
       if (!skill) continue;
       await prisma.jobSkill
         .create({

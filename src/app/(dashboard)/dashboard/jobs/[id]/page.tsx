@@ -19,7 +19,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatSalaryRange, relativeDate } from "@/lib/utils";
-import { ARRANGEMENT_LABEL, COUNTRY_LABEL, seniorityLabel, experienceLabel } from "@/features/jobs/format";
+import {
+  ARRANGEMENT_LABEL,
+  COUNTRY_LABEL,
+  seniorityLabel,
+  experienceLabel,
+} from "@/features/jobs/format";
 import { SaveButton } from "@/features/jobs/components/save-button";
 import { VerdictBadge } from "@/features/jobs/components/verdict-badge";
 import { AnalyzeButton } from "@/features/matching/components/analyze-button";
@@ -30,7 +35,10 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const job = await prisma.job.findUnique({ where: { id }, select: { title: true, company: true } });
+  const job = await prisma.job.findUnique({
+    where: { id },
+    select: { title: true, company: true },
+  });
   return { title: job ? `${job.title} · ${job.company}` : "Job", robots: { index: false } };
 }
 
@@ -58,7 +66,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
     <div className="mx-auto max-w-3xl space-y-6">
       <Link
         href="/dashboard/jobs"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" /> Back to search
       </Link>
@@ -66,7 +74,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{job.title}</h1>
-          <p className="mt-1 flex items-center gap-1.5 text-muted-foreground">
+          <p className="text-muted-foreground mt-1 flex items-center gap-1.5">
             <Building2 className="size-4" /> {job.company}
           </p>
         </div>
@@ -80,10 +88,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+      <div className="text-muted-foreground flex flex-wrap gap-x-5 gap-y-2 text-sm">
         <span className="flex items-center gap-1.5">
           <MapPin className="size-4" />
-          {job.location || COUNTRY_LABEL[job.country] || job.country} · {ARRANGEMENT_LABEL[job.workArrangement]}
+          {job.location || COUNTRY_LABEL[job.country] || job.country} ·{" "}
+          {ARRANGEMENT_LABEL[job.workArrangement]}
         </span>
         {salary ? (
           <span className="flex items-center gap-1.5">
@@ -103,7 +112,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
           <CardTitle className="flex items-center gap-2 text-base">
             <Target className="size-4" /> Should I apply?
           </CardTitle>
-          {match ? <VerdictBadge verdict={match.verdict} score={match.overallScore} size="lg" /> : null}
+          {match ? (
+            <VerdictBadge verdict={match.verdict} score={match.overallScore} size="lg" />
+          ) : null}
         </CardHeader>
         <CardContent>
           {match ? (
@@ -115,7 +126,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             </div>
           ) : (
             <div className="flex flex-col items-start gap-3">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Run a match analysis to score this role against your profile and CV, and get a clear
                 verdict.
               </p>
@@ -150,7 +161,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             <span>{ARRANGEMENT_LABEL[job.workArrangement]}</span>
           </div>
           {job.extractionConfidence != null ? (
-            <p className="pt-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground pt-1 text-xs">
               These signals are extracted from the posting text (confidence{" "}
               {Math.round(job.extractionConfidence * 100)}%). Always confirm with the employer.
             </p>
@@ -166,7 +177,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         <CardContent className="space-y-3">
           {required.length ? (
             <div>
-              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-muted-foreground mb-1.5 text-xs font-medium tracking-wide uppercase">
                 Required
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -178,7 +189,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
           ) : null}
           {preferred.length ? (
             <div>
-              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-muted-foreground mb-1.5 text-xs font-medium tracking-wide uppercase">
                 Preferred
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -191,7 +202,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             </div>
           ) : null}
           {job.jobSkills.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No specific skills detected in this posting.</p>
+            <p className="text-muted-foreground text-sm">
+              No specific skills detected in this posting.
+            </p>
           ) : null}
         </CardContent>
       </Card>
@@ -202,7 +215,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
           <CardTitle className="text-base">Full description</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+          <div className="text-foreground/90 text-sm leading-relaxed whitespace-pre-wrap">
             {job.description}
           </div>
         </CardContent>

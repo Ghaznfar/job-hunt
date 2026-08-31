@@ -65,12 +65,14 @@ export function AddApplicationDialog() {
             <div className="space-y-1">
               <Label htmlFor="company">Company</Label>
               <Input id="company" name="company" required />
-              {errors.company ? <p className="text-xs text-destructive">{errors.company[0]}</p> : null}
+              {errors.company ? (
+                <p className="text-destructive text-xs">{errors.company[0]}</p>
+              ) : null}
             </div>
             <div className="space-y-1">
               <Label htmlFor="title">Job title</Label>
               <Input id="title" name="title" required />
-              {errors.title ? <p className="text-xs text-destructive">{errors.title[0]}</p> : null}
+              {errors.title ? <p className="text-destructive text-xs">{errors.title[0]}</p> : null}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">

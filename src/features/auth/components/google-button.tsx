@@ -9,7 +9,9 @@ export function GoogleButton({ next }: { next?: string }) {
       type="button"
       variant="outline"
       className="w-full"
-      onClick={() => signIn("google", { callbackUrl: next && next.startsWith("/") ? next : "/dashboard" })}
+      onClick={() =>
+        signIn("google", { callbackUrl: next && next.startsWith("/") ? next : "/dashboard" })
+      }
     >
       <svg className="size-4" viewBox="0 0 24 24" aria-hidden>
         <path

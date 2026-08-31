@@ -231,7 +231,10 @@ export async function getCurrentVersion(userId: string, resumeId: string) {
 }
 
 export async function setDefaultResume(userId: string, resumeId: string) {
-  const owned = await prisma.resume.findFirst({ where: { id: resumeId, userId }, select: { id: true } });
+  const owned = await prisma.resume.findFirst({
+    where: { id: resumeId, userId },
+    select: { id: true },
+  });
   if (!owned) throw new Error("Not found");
   await prisma.$transaction([
     prisma.resume.updateMany({ where: { userId }, data: { isDefault: false } }),
@@ -249,10 +252,16 @@ export async function deleteResume(userId: string, resumeId: string) {
     select: { id: true, fileKey: true, isDefault: true },
   });
   if (!resume) throw new Error("Not found");
-  if (resume.fileKey) await getStorage().delete(resume.fileKey).catch(() => undefined);
+  if (resume.fileKey)
+    await getStorage()
+      .delete(resume.fileKey)
+      .catch(() => undefined);
   await prisma.resume.delete({ where: { id: resume.id } });
   if (resume.isDefault) {
-    const next = await prisma.resume.findFirst({ where: { userId }, orderBy: { updatedAt: "desc" } });
+    const next = await prisma.resume.findFirst({
+      where: { userId },
+      orderBy: { updatedAt: "desc" },
+    });
     if (next) await prisma.resume.update({ where: { id: next.id }, data: { isDefault: true } });
   }
 }
@@ -278,7 +287,8 @@ export async function saveVersionContent(
     await tx.language.deleteMany({ where: { resumeVersionId: versionId } });
     await tx.resumeSkill.deleteMany({ where: { resumeVersionId: versionId } });
     await writeVersionContent(tx, versionId, data);
-    if (opts?.label) await tx.resumeVersion.update({ where: { id: versionId }, data: { label: opts.label } });
+    if (opts?.label)
+      await tx.resumeVersion.update({ where: { id: versionId }, data: { label: opts.label } });
   });
   await attachSkills(versionId, data.skills);
   await prisma.resume.updateMany({
@@ -292,9 +302,17 @@ export async function createVersion(
   userId: string,
   resumeId: string,
   data: StructuredResume,
-  opts: { label: string; source: "EDIT" | "TAILORED"; tailoredForJobId?: string; makeCurrent?: boolean },
+  opts: {
+    label: string;
+    source: "EDIT" | "TAILORED";
+    tailoredForJobId?: string;
+    makeCurrent?: boolean;
+  },
 ) {
-  const resume = await prisma.resume.findFirst({ where: { id: resumeId, userId }, select: { id: true } });
+  const resume = await prisma.resume.findFirst({
+    where: { id: resumeId, userId },
+    select: { id: true },
+  });
   if (!resume) throw new Error("Not found");
 
   const version = await prisma.$transaction(async (tx) => {

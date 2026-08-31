@@ -18,15 +18,20 @@ import {
 } from "@/services/resume.service";
 import { editableResumeSchema, createResumeSchema, renameResumeSchema } from "./schema";
 
-export async function uploadResumeAction(form: FormData): Promise<ActionResult<{ resumeId: string }>> {
+export async function uploadResumeAction(
+  form: FormData,
+): Promise<ActionResult<{ resumeId: string }>> {
   return runAction("resume.upload", async () => {
     const user = await requireUser();
     const file = form.get("file");
     const nameRaw = String(form.get("name") || "").trim();
 
-    if (!(file instanceof File) || file.size === 0) return fail("Choose a PDF or DOCX file to upload.");
+    if (!(file instanceof File) || file.size === 0)
+      return fail("Choose a PDF or DOCX file to upload.");
     if (file.size > MAX_UPLOAD_BYTES) {
-      return fail(`File is too large. Maximum size is ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)}MB.`);
+      return fail(
+        `File is too large. Maximum size is ${Math.round(MAX_UPLOAD_BYTES / 1024 / 1024)}MB.`,
+      );
     }
     if (!ACCEPTED_MIME[file.type] && !/\.(pdf|docx)$/i.test(file.name)) {
       return fail("Unsupported file type. Upload a PDF or DOCX.");
@@ -49,7 +54,9 @@ export async function uploadResumeAction(form: FormData): Promise<ActionResult<{
   });
 }
 
-export async function createBlankResumeAction(input: unknown): Promise<ActionResult<{ resumeId: string }>> {
+export async function createBlankResumeAction(
+  input: unknown,
+): Promise<ActionResult<{ resumeId: string }>> {
   return runAction("resume.createBlank", async () => {
     const user = await requireUser();
     const parsed = parseInput(createResumeSchema, input);

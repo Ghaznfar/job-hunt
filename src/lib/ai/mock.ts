@@ -55,7 +55,8 @@ function detectSeniority(title: string, text: string): JobAnalysis["seniorityLev
 
 function detectArrangement(text: string): JobAnalysis["workArrangement"] {
   const t = text.toLowerCase();
-  if (/\bfully remote\b|\b100% remote\b|\bremote[- ]first\b|\bwork from home\b/.test(t)) return "REMOTE";
+  if (/\bfully remote\b|\b100% remote\b|\bremote[- ]first\b|\bwork from home\b/.test(t))
+    return "REMOTE";
   if (/\bhybrid\b/.test(t)) return "HYBRID";
   if (/\bon[- ]?site\b|\bin[- ]office\b|\bin person\b/.test(t)) return "ONSITE";
   if (/\bremote\b/.test(t)) return "REMOTE";
@@ -64,9 +65,17 @@ function detectArrangement(text: string): JobAnalysis["workArrangement"] {
 
 function detectSponsorship(text: string): JobAnalysis["sponsorshipAvailable"] {
   const t = text.toLowerCase();
-  if (/no\s+(visa\s+)?sponsorship|not\s+able\s+to\s+sponsor|unable\s+to\s+sponsor|without\s+sponsorship|do not provide sponsorship/.test(t))
+  if (
+    /no\s+(visa\s+)?sponsorship|not\s+able\s+to\s+sponsor|unable\s+to\s+sponsor|without\s+sponsorship|do not provide sponsorship/.test(
+      t,
+    )
+  )
     return "NO";
-  if (/sponsorship\s+(is\s+)?(available|provided|offered)|will\s+sponsor|visa\s+sponsorship\s+available/.test(t))
+  if (
+    /sponsorship\s+(is\s+)?(available|provided|offered)|will\s+sponsor|visa\s+sponsorship\s+available/.test(
+      t,
+    )
+  )
     return "YES";
   return "UNKNOWN";
 }
@@ -74,7 +83,11 @@ function detectSponsorship(text: string): JobAnalysis["sponsorshipAvailable"] {
 function detectWorkAuth(text: string, country?: string): string[] {
   const t = text.toLowerCase();
   const out: string[] = [];
-  if (/authoriz(ed|ation) to work in the (us|united states)|us work authorization|must be a us citizen|us citizen(ship)? required|security clearance/.test(t))
+  if (
+    /authoriz(ed|ation) to work in the (us|united states)|us work authorization|must be a us citizen|us citizen(ship)? required|security clearance/.test(
+      t,
+    )
+  )
     out.push("US");
   if (/right to work in the uk|uk work authorization|settled status/.test(t)) out.push("GB");
   if (out.length === 0 && country && /(clearance|citizen)/.test(t)) out.push(country);
@@ -103,7 +116,8 @@ export class MockAIProvider implements AIProvider {
         `(require|must have|essential|strong)[^.]{0,80}\\b${s.name.toLowerCase()}\\b|\\b${s.name.toLowerCase()}\\b[^.]{0,40}(required|essential)`,
         "i",
       );
-      if (near.test(text.toLowerCase()) || required.length + preferred.length < 4) required.push(s.name);
+      if (near.test(text.toLowerCase()) || required.length + preferred.length < 4)
+        required.push(s.name);
       else preferred.push(s.name);
     }
     const years = detectYears(text);
@@ -218,10 +232,9 @@ export class MockAIProvider implements AIProvider {
             .slice(0, 3)
             .join(", ")}.`,
         strengths: skills.slice(0, 5).map((s) => `Demonstrated ${s} experience`),
-        weaknesses:
-          resume.experience.every((e) => e.bullets.length === 0)
-            ? ["Experience entries lack quantified achievement bullets"]
-            : [],
+        weaknesses: resume.experience.every((e) => e.bullets.length === 0)
+          ? ["Experience entries lack quantified achievement bullets"]
+          : [],
         detectedSkills: skills,
         totalYearsExperience: years || null,
       }),
@@ -268,7 +281,9 @@ export class MockAIProvider implements AIProvider {
       });
     }
     ctx.resume.experience.slice(0, 2).forEach((exp, i) => {
-      const relevant = exp.techs.filter((t) => highlight.some((h) => h.toLowerCase() === t.toLowerCase()));
+      const relevant = exp.techs.filter((t) =>
+        highlight.some((h) => h.toLowerCase() === t.toLowerCase()),
+      );
       if (exp.bullets[0]) {
         changes.push({
           section: "Experience",

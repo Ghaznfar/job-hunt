@@ -50,13 +50,13 @@ export default async function InterviewsPage() {
         />
       ) : (
         <>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {usage.remaining} of {usage.limit} AI generations left this month.
           </p>
 
           {jobsWithPrep.length > 0 ? (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-muted-foreground">Your prep sets</h2>
+              <h2 className="text-muted-foreground text-sm font-semibold">Your prep sets</h2>
               {jobsWithPrep.map((p) => (
                 <Card key={p.job.id}>
                   <CardContent className="flex items-center justify-between p-4">
@@ -67,7 +67,7 @@ export default async function InterviewsPage() {
                       >
                         {p.job.title}
                       </Link>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         {p.job.company} · {p.count} questions · {relativeDate(p.updatedAt)}
                       </p>
                     </div>
@@ -81,7 +81,7 @@ export default async function InterviewsPage() {
           ) : null}
 
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-muted-foreground">Start prep for a job</h2>
+            <h2 className="text-muted-foreground text-sm font-semibold">Start prep for a job</h2>
             {candidateJobs.length === 0 ? (
               <EmptyState
                 icon={MessagesSquare}
@@ -100,7 +100,7 @@ export default async function InterviewsPage() {
                     <CardContent className="flex items-center justify-between p-4">
                       <div className="min-w-0">
                         <p className="truncate font-medium">{j.title}</p>
-                        <p className="truncate text-sm text-muted-foreground">{j.company}</p>
+                        <p className="text-muted-foreground truncate text-sm">{j.company}</p>
                       </div>
                       <Button asChild size="sm" variant="outline">
                         <Link href={`/dashboard/interviews/${j.id}`}>Prep</Link>

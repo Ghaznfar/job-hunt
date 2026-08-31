@@ -10,14 +10,7 @@ export async function getDashboardData(userId: string) {
   const desiredTitles = profile?.desiredTitles ?? [];
   const targetCountries = profile?.targetCountries ?? [];
 
-  const [
-    applications,
-    interviews,
-    offers,
-    savedJobs,
-    matchAgg,
-    topMatches,
-  ] = await Promise.all([
+  const [applications, interviews, offers, savedJobs, matchAgg, topMatches] = await Promise.all([
     prisma.application.count({ where: { userId } }),
     prisma.application.count({
       where: { userId, status: { in: ["INTERVIEW", "TECHNICAL_INTERVIEW", "FINAL_INTERVIEW"] } },
@@ -65,7 +58,13 @@ export async function getDashboardData(userId: string) {
     });
     recommended = [
       ...recommended,
-      ...fresh.map((j) => ({ jobId: j.id, title: j.title, company: j.company, score: null, verdict: null })),
+      ...fresh.map((j) => ({
+        jobId: j.id,
+        title: j.title,
+        company: j.company,
+        score: null,
+        verdict: null,
+      })),
     ];
   }
 

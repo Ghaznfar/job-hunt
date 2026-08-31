@@ -87,3 +87,51 @@ src/lib/           provider abstractions + infra (ai, jobs, auth, storage, …)
 src/services/      cross-cutting orchestration (matching, ingestion, billing, …)
 tests/             unit / integration / e2e
 ```
+
+## Production deployment
+
+The image is a standard Next.js **standalone** build. Any container host works
+(Fly.io, Railway, Render, ECS, Cloud Run, a plain VPS).
+
+1. **Provision Postgres** and set `DATABASE_URL` / `DIRECT_URL`.
+2. **Generate `AUTH_SECRET`**: `openssl rand -base64 32`. Set `AUTH_URL` to the
+   public URL and `AUTH_TRUST_HOST=true`.
+3. **Build & push the image**:
+   ```bash
+   docker build -t <registry>/jobhunt:<tag> .
+   docker push <registry>/jobhunt:<tag>
+   ```
+4. **Run it.** The container entrypoint runs `prisma migrate deploy` then starts
+   the server on `:3000`. Provide env vars from your platform's secret store —
+   never bake them into the image.
+5. **Seed once** (optional, for the skill catalogue + demo data):
+   `docker run --rm -e DATABASE_URL=... <image> node_modules/.bin/tsx prisma/seed.ts`
+   In production you typically only need the skill catalogue — run
+   `prisma db seed` or a trimmed seed.
+6. **Job ingestion**: schedule `GET /api/cron/ingest-jobs` with the `CRON_SECRET`
+   (Vercel Cron, a platform scheduler, or a system cron hitting the URL) — e.g.
+   every 6 hours.
+7. **Stripe** (when going paid): create the Pro price, set `STRIPE_*` vars, and
+   point a webhook endpoint at `/api/stripe/webhook` for
+   `checkout.session.completed` and `customer.subscription.*`.
+8. **Storage**: set `STORAGE_DRIVER=s3` with an S3-compatible bucket for CV files
+   (the local driver is single-node only).
+
+### `docker compose` (self-host all-in-one)
+
+```bash
+cp .env.example .env
+# set AUTH_SECRET; optionally ANTHROPIC_API_KEY / ADZUNA_* / STRIPE_*
+export AUTH_SECRET=$(openssl rand -base64 32)
+docker compose up --build
+```
+
+Brings up Postgres + the app; the app runs migrations on start and serves on
+`http://localhost:3000`.
+
+## CI
+
+`.github/workflows/ci.yml`: **verify** (prettier, lint, typecheck, migrations,
+unit+integration tests, build) · **e2e** (Playwright against a seeded DB) ·
+**security** (`npm audit`, Gitleaks) · **docker** (image build + Trivy scan).
+No auto-deploy — wire your platform's deploy step after `docker` passes.

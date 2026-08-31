@@ -10,7 +10,9 @@ export default function CookiesPage() {
   return (
     <>
       <h1>Cookie Policy</h1>
-      <p>Last updated: {new Date().toLocaleDateString("en-GB", { year: "numeric", month: "long" })}</p>
+      <p>
+        Last updated: {new Date().toLocaleDateString("en-GB", { year: "numeric", month: "long" })}
+      </p>
 
       <h2>Strictly necessary cookies</h2>
       <p>These are required for the app to function and cannot be switched off:</p>
@@ -31,8 +33,8 @@ export default function CookiesPage() {
 
       <h2>Local storage</h2>
       <p>
-        We use your browser&apos;s local storage to remember your theme preference (light/dark/system).
-        This never leaves your device.
+        We use your browser&apos;s local storage to remember your theme preference
+        (light/dark/system). This never leaves your device.
       </p>
 
       <h2>What we don&apos;t use</h2>

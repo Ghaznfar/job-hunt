@@ -1,10 +1,5 @@
 export type WorkAuthStatus =
-  | "CITIZEN"
-  | "PERMANENT_RESIDENT"
-  | "VISA_HOLDER"
-  | "NEEDS_SPONSORSHIP"
-  | "NONE"
-  | "UNKNOWN";
+  "CITIZEN" | "PERMANENT_RESIDENT" | "VISA_HOLDER" | "NEEDS_SPONSORSHIP" | "NONE" | "UNKNOWN";
 
 export interface CandidateInput {
   yearsExperience: number | null;

@@ -10,7 +10,9 @@ export default function TermsPage() {
   return (
     <>
       <h1>Terms of Service</h1>
-      <p>Last updated: {new Date().toLocaleDateString("en-GB", { year: "numeric", month: "long" })}</p>
+      <p>
+        Last updated: {new Date().toLocaleDateString("en-GB", { year: "numeric", month: "long" })}
+      </p>
 
       <h2>1. The service</h2>
       <p>
@@ -30,7 +32,9 @@ export default function TermsPage() {
       <ul>
         <li>Do not upload content you do not have the right to use.</li>
         <li>Do not use the service to misrepresent your qualifications to employers.</li>
-        <li>Do not attempt to scrape, overload, reverse-engineer or circumvent limits of the service.</li>
+        <li>
+          Do not attempt to scrape, overload, reverse-engineer or circumvent limits of the service.
+        </li>
         <li>Do not use the service for unlawful, discriminatory or abusive purposes.</li>
       </ul>
 
@@ -38,8 +42,8 @@ export default function TermsPage() {
       <p>
         AI features assist with drafting and analysis based on the information you provide. You are
         responsible for reviewing all output before using it. Do not submit AI-generated claims that
-        are untrue. Eligibility indicators (work authorization, sponsorship, etc.) are heuristics and
-        not immigration or legal advice.
+        are untrue. Eligibility indicators (work authorization, sponsorship, etc.) are heuristics
+        and not immigration or legal advice.
       </p>
 
       <h2>5. Plans &amp; billing</h2>

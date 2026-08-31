@@ -105,7 +105,9 @@ export function OnboardingWizard({
           <span className="font-medium">
             Step {step + 1} of {STEPS.length} · {STEPS[step]}
           </span>
-          <span className="text-muted-foreground">{Math.round(((step + 1) / STEPS.length) * 100)}%</span>
+          <span className="text-muted-foreground">
+            {Math.round(((step + 1) / STEPS.length) * 100)}%
+          </span>
         </div>
         <Progress value={((step + 1) / STEPS.length) * 100} />
       </div>
@@ -117,7 +119,7 @@ export function OnboardingWizard({
           {step === 2 ? <EligibilityFields state={state} patch={patch} /> : null}
           {step === 3 ? (
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Pick the skills and technologies you actually have experience with. This drives your
                 match scores — only add what&apos;s real.
               </p>
@@ -131,7 +133,7 @@ export function OnboardingWizard({
             </div>
           ) : null}
 
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {error ? <p className="text-destructive text-sm">{error}</p> : null}
 
           <div className="flex items-center justify-between pt-2">
             <Button
@@ -156,7 +158,7 @@ export function OnboardingWizard({
         </CardContent>
       </Card>
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-center text-xs">
         You can change any of this later in Profile. Optional fields can be left blank.
       </p>
     </div>

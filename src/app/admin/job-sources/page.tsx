@@ -40,7 +40,7 @@ export default async function AdminJobSourcesPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>{s._count.jobs}</TableCell>
-                <TableCell className="text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground text-xs">
                   {s.lastRunAt ? relativeDate(s.lastRunAt) : "never"}
                 </TableCell>
               </TableRow>
@@ -48,7 +48,7 @@ export default async function AdminJobSourcesPage() {
           </TableBody>
         </Table>
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-xs">
         Enable/disable is controlled by the <code>JOB_PROVIDERS</code> env var and provider
         credentials (e.g. <code>ADZUNA_APP_ID</code>).
       </p>

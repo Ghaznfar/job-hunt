@@ -35,7 +35,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-6 shadow-sm">
+    <form onSubmit={onSubmit} className="bg-card space-y-4 rounded-xl border p-6 shadow-sm">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">Choose a new password</h1>
       </div>
@@ -47,12 +47,12 @@ export function ResetPasswordForm({ token }: { token: string }) {
       <div className="space-y-2">
         <Label htmlFor="password">New password</Label>
         <Input id="password" name="password" type="password" autoComplete="new-password" required />
-        {errors.password ? <p className="text-xs text-destructive">{errors.password[0]}</p> : null}
+        {errors.password ? <p className="text-destructive text-xs">{errors.password[0]}</p> : null}
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirm">Confirm password</Label>
         <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required />
-        {errors.confirm ? <p className="text-xs text-destructive">{errors.confirm[0]}</p> : null}
+        {errors.confirm ? <p className="text-destructive text-xs">{errors.confirm[0]}</p> : null}
       </div>
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? <Loader2 className="size-4 animate-spin" /> : null}

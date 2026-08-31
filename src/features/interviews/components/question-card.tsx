@@ -62,21 +62,23 @@ export function QuestionCard({ q, index }: { q: Q; index: number }) {
           </>
         ) : (
           <>
-            <div className="rounded-md border bg-muted/30 p-3 text-sm">
-              <p className="mb-1 text-xs font-medium uppercase text-muted-foreground">Your answer</p>
+            <div className="bg-muted/30 rounded-md border p-3 text-sm">
+              <p className="text-muted-foreground mb-1 text-xs font-medium uppercase">
+                Your answer
+              </p>
               <p className="whitespace-pre-wrap">{answer}</p>
             </div>
 
             {feedback ? (
-              <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
-                <p className="mb-1 text-xs font-medium uppercase text-primary">Feedback</p>
+              <div className="border-primary/30 bg-primary/5 rounded-md border p-3 text-sm">
+                <p className="text-primary mb-1 text-xs font-medium uppercase">Feedback</p>
                 <p>{feedback}</p>
               </div>
             ) : null}
 
             {improved ? (
-              <div className="rounded-md border border-success/30 bg-success/5 p-3 text-sm">
-                <p className="mb-1 text-xs font-medium uppercase text-success">Stronger version</p>
+              <div className="border-success/30 bg-success/5 rounded-md border p-3 text-sm">
+                <p className="text-success mb-1 text-xs font-medium uppercase">Stronger version</p>
                 <p className="whitespace-pre-wrap">{improved}</p>
               </div>
             ) : null}

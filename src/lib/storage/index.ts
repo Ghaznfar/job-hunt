@@ -90,17 +90,13 @@ class S3Storage implements StorageDriver {
   }
 
   async getSignedUrl(key: string, expiresInSec = 300) {
-    return getSignedUrl(
-      this.client,
-      new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: key }),
-      { expiresIn: expiresInSec },
-    );
+    return getSignedUrl(this.client, new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: key }), {
+      expiresIn: expiresInSec,
+    });
   }
 
   async getBytes(key: string) {
-    const res = await this.client.send(
-      new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: key }),
-    );
+    const res = await this.client.send(new GetObjectCommand({ Bucket: env.S3_BUCKET, Key: key }));
     const bytes = await res.Body!.transformToByteArray();
     return Buffer.from(bytes);
   }

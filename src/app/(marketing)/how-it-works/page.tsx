@@ -46,27 +46,27 @@ export default function HowItWorksPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <h1 className="text-4xl font-bold tracking-tight">How it works</h1>
-      <p className="mt-4 text-muted-foreground">
+      <p className="text-muted-foreground mt-4">
         JobHunt is built around one question: <em>is this job actually worth your time?</em>
       </p>
 
       <ol className="mt-12 space-y-8">
         {stages.map((s) => (
           <li key={s.n} className="flex gap-4">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
+            <span className="bg-primary text-primary-foreground flex size-9 shrink-0 items-center justify-center rounded-full font-semibold">
               {s.n}
             </span>
             <div>
               <h2 className="font-semibold">{s.t}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{s.d}</p>
+              <p className="text-muted-foreground mt-1 text-sm">{s.d}</p>
             </div>
           </li>
         ))}
       </ol>
 
-      <div className="mt-12 rounded-xl border bg-muted/30 p-6">
+      <div className="bg-muted/30 mt-12 rounded-xl border p-6">
         <h3 className="font-semibold">On accuracy and honesty</h3>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-sm">
           The scoring engine is deterministic and testable. AI is used only to interpret and phrase
           results using facts already in your profile and CV. It will never invent employment,
           skills, certifications or achievements.

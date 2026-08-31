@@ -1,9 +1,5 @@
 import type { ApplicationStatus } from "@prisma/client";
-import {
-  APPLIED_OR_BEYOND,
-  RESPONDED_STATUSES,
-  INTERVIEW_STATUSES,
-} from "./constants";
+import { APPLIED_OR_BEYOND, RESPONDED_STATUSES, INTERVIEW_STATUSES } from "./constants";
 
 export interface ApplicationStatsInput {
   /** Current status of each application. */

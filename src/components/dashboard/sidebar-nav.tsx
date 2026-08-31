@@ -11,9 +11,7 @@ function NavList({ items, onNavigate }: { items: typeof dashboardNav; onNavigate
     <nav className="space-y-1">
       {items.map((item) => {
         const active =
-          item.href === "/dashboard"
-            ? pathname === "/dashboard"
-            : pathname.startsWith(item.href);
+          item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(item.href);
         return (
           <Link
             key={item.href}

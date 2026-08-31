@@ -106,14 +106,18 @@ export function CoverLetterComposer({
         </div>
 
         {jobs.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Save or analyze a job first, then come back to generate a cover letter for it.
           </p>
         ) : null}
 
         {!content ? (
           <Button onClick={generate} disabled={genPending || !jobId}>
-            {genPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+            {genPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Sparkles className="size-4" />
+            )}
             {genPending ? "Writing…" : "Generate cover letter"}
           </Button>
         ) : (
@@ -126,11 +130,19 @@ export function CoverLetterComposer({
             />
             <div className="flex flex-wrap gap-2">
               <Button onClick={save} disabled={savePending}>
-                {savePending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+                {savePending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Save className="size-4" />
+                )}
                 Save
               </Button>
               <Button variant="outline" onClick={generate} disabled={genPending}>
-                {genPending ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
+                {genPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="size-4" />
+                )}
                 Regenerate
               </Button>
               <Button

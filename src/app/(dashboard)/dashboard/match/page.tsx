@@ -51,7 +51,7 @@ export default async function MatchIndexPage() {
                   >
                     {m.job.title}
                   </Link>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {m.job.company} · {m.job.country} · {ARRANGEMENT_LABEL[m.job.workArrangement]}
                   </p>
                 </div>

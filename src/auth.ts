@@ -45,7 +45,13 @@ const providers: NextAuthConfig["providers"] = [
         throw new Error("EMAIL_NOT_VERIFIED");
       }
 
-      return { id: user.id, email: user.email, name: user.name, image: user.image, role: user.role };
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        image: user.image,
+        role: user.role,
+      };
     },
   }),
 ];
@@ -116,9 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   events: {
     async createUser({ user }) {
       if (!user.id) return;
-      await prisma.subscription
-        .create({ data: { userId: user.id } })
-        .catch(() => undefined);
+      await prisma.subscription.create({ data: { userId: user.id } }).catch(() => undefined);
     },
   },
 });

@@ -50,9 +50,20 @@ const sample: StructuredResume = {
   links: [],
   summary: "DevOps engineer",
   experience: [
-    { company: "Acme", title: "DevOps Engineer", location: "", startDate: "2021", endDate: "", current: true, bullets: ["Ran Kubernetes"], techs: ["Kubernetes"] },
+    {
+      company: "Acme",
+      title: "DevOps Engineer",
+      location: "",
+      startDate: "2021",
+      endDate: "",
+      current: true,
+      bullets: ["Ran Kubernetes"],
+      techs: ["Kubernetes"],
+    },
   ],
-  education: [{ institution: "Uni", degree: "BSc", field: "CS", startDate: "", endDate: "2020", grade: "" }],
+  education: [
+    { institution: "Uni", degree: "BSc", field: "CS", startDate: "", endDate: "2020", grade: "" },
+  ],
   skills: ["AWS", "Kubernetes", "Terraform"],
   certifications: [{ name: "CKA", issuer: "CNCF" }],
   projects: [],
@@ -85,9 +96,9 @@ describe("resume service", () => {
 
   it("prevents editing another user's resume version", async () => {
     const resume = await createBlankResume(userId, "CV");
-    await expect(
-      saveVersionContent(otherUserId, resume.versions[0].id, sample),
-    ).rejects.toThrow(/not found/i);
+    await expect(saveVersionContent(otherUserId, resume.versions[0].id, sample)).rejects.toThrow(
+      /not found/i,
+    );
   });
 
   it("creates a TAILORED version and can switch the current pointer", async () => {

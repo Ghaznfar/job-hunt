@@ -12,9 +12,9 @@ export default function ContactPage() {
   return (
     <div className="mx-auto max-w-xl px-4 py-16 sm:px-6">
       <h1 className="text-4xl font-bold tracking-tight">Contact us</h1>
-      <p className="mt-4 text-muted-foreground">
+      <p className="text-muted-foreground mt-4">
         Questions, feedback or bug reports — send them over. You can also email{" "}
-        <a href={`mailto:${brand.supportEmail}`} className="underline hover:text-foreground">
+        <a href={`mailto:${brand.supportEmail}`} className="hover:text-foreground underline">
           {brand.supportEmail}
         </a>
         .

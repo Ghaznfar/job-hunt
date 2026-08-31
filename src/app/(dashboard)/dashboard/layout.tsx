@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/90 px-4 backdrop-blur sm:px-6">
+      <header className="bg-background/90 sticky top-0 z-30 flex h-16 items-center justify-between border-b px-4 backdrop-blur sm:px-6">
         <div className="flex items-center gap-3">
           <MobileNav />
           <Logo href="/dashboard" />
@@ -28,7 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           {subscription?.plan !== "PRO" ? (
             <Link
               href="/dashboard/settings/billing"
-              className="hidden text-sm font-medium text-primary hover:underline sm:block"
+              className="text-primary hidden text-sm font-medium hover:underline sm:block"
             >
               Upgrade to Pro
             </Link>

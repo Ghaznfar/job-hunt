@@ -68,9 +68,7 @@ export async function generateTailoring(
   if (!job) throw new Error("Job not found");
 
   const structured = versionToStructured(version);
-  const allowedNames = [
-    ...new Set([...structured.skills, ...userSkills.map((u) => u.skill.name)]),
-  ];
+  const allowedNames = [...new Set([...structured.skills, ...userSkills.map((u) => u.skill.name)])];
   const allowedSlugs = new Set(
     [...structured.skills, ...userSkills.map((u) => u.skill.name)]
       .flatMap((n) => extractSkills(n))

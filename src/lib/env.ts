@@ -59,7 +59,10 @@ const schema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().optional().default(""),
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().default(""),
   STRIPE_PRO_PRICE_ID: z.string().optional().default(""),
-  STRIPE_PORTAL_RETURN_URL: z.string().optional().default("http://localhost:3000/dashboard/settings"),
+  STRIPE_PORTAL_RETURN_URL: z
+    .string()
+    .optional()
+    .default("http://localhost:3000/dashboard/settings"),
 
   EMAIL_DRIVER: z.enum(["console", "resend"]).default("console"),
   RESEND_API_KEY: z.string().optional().default(""),
@@ -75,7 +78,9 @@ export type Env = z.infer<typeof schema>;
 function loadEnv(): Env {
   const parsed = schema.safeParse(process.env);
   if (!parsed.success) {
-    const issues = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`).join("\n");
+    const issues = parsed.error.issues
+      .map((i) => `  - ${i.path.join(".")}: ${i.message}`)
+      .join("\n");
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
   return parsed.data;

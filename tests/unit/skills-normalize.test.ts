@@ -41,7 +41,9 @@ describe("extractSkills", () => {
     const text =
       "We are looking for a DevOps Engineer with AWS, Docker and Kubernetes experience. " +
       "Terraform and CI/CD pipelines (GitHub Actions) required. Nice to have: Python.";
-    const slugs = extractSkills(text).map((s) => s.slug).sort();
+    const slugs = extractSkills(text)
+      .map((s) => s.slug)
+      .sort();
     expect(slugs).toContain("aws");
     expect(slugs).toContain("docker");
     expect(slugs).toContain("kubernetes");

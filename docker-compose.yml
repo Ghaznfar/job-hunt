@@ -49,8 +49,6 @@ services:
       RESEND_API_KEY: ${RESEND_API_KEY:-}
     ports:
       - "3000:3000"
-    # Run migrations then start the server.
-    command: sh -c "npx prisma migrate deploy && node server.js"
 
 volumes:
   db_data:

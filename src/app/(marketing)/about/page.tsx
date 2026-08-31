@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Why JobHunt exists: helping tech professionals stop applying blindly and focus on the jobs they can actually get.",
+  description:
+    "Why JobHunt exists: helping tech professionals stop applying blindly and focus on the jobs they can actually get.",
   alternates: { canonical: "/about" },
 };
 
@@ -10,18 +11,18 @@ export default function AboutPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
       <h1 className="text-4xl font-bold tracking-tight">About JobHunt</h1>
-      <div className="prose prose-sm mt-8 max-w-none text-muted-foreground [&_h2]:mt-8 [&_h2]:text-foreground [&_p]:mt-3">
+      <div className="prose prose-sm text-muted-foreground [&_h2]:text-foreground mt-8 max-w-none [&_h2]:mt-8 [&_p]:mt-3">
         <p>
           Job hunting as an engineer has become a numbers game: fire off a hundred applications and
-          hope. It&apos;s exhausting, it&apos;s demoralising, and it produces low-quality applications
-          that don&apos;t get responses.
+          hope. It&apos;s exhausting, it&apos;s demoralising, and it produces low-quality
+          applications that don&apos;t get responses.
         </p>
         <h2>The idea</h2>
         <p>
           JobHunt flips the model. Instead of helping you apply to more jobs faster, it helps you
-          decide which jobs are worth applying to at all — using your real skills, experience, salary
-          expectations and, critically, your work eligibility. Then it helps you make each of those
-          applications genuinely strong.
+          decide which jobs are worth applying to at all — using your real skills, experience,
+          salary expectations and, critically, your work eligibility. Then it helps you make each of
+          those applications genuinely strong.
         </p>
         <h2>Principles</h2>
         <p>

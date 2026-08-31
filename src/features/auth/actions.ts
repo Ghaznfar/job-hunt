@@ -22,7 +22,9 @@ export async function clientKey(scope: string): Promise<string> {
   return `${scope}:${ip}`;
 }
 
-export async function signUpAction(input: FormData | unknown): Promise<ActionResult<{ email: string }>> {
+export async function signUpAction(
+  input: FormData | unknown,
+): Promise<ActionResult<{ email: string }>> {
   return runAction("auth.signUp", async () => {
     const parsed = parseInput(signUpSchema, input);
     if (!parsed.ok) return parsed.result;
@@ -66,26 +68,23 @@ export async function resendVerificationAction(email: string): Promise<ActionRes
       const token = await createEmailVerificationToken(email.toLowerCase());
       await sendVerificationEmail(
         email.toLowerCase(),
-        absoluteUrl(`/verify-email?token=${token}&email=${encodeURIComponent(email.toLowerCase())}`),
+        absoluteUrl(
+          `/verify-email?token=${token}&email=${encodeURIComponent(email.toLowerCase())}`,
+        ),
       );
     }
     return ok(undefined);
   });
 }
 
-export async function verifyEmailAction(
-  email: string,
-  token: string,
-): Promise<ActionResult> {
+export async function verifyEmailAction(email: string, token: string): Promise<ActionResult> {
   return runAction("auth.verifyEmail", async () => {
     const success = await consumeEmailVerificationToken(email.toLowerCase(), token);
     return success ? ok(undefined) : fail("This verification link is invalid or has expired.");
   });
 }
 
-export async function requestPasswordResetAction(
-  input: FormData | unknown,
-): Promise<ActionResult> {
+export async function requestPasswordResetAction(input: FormData | unknown): Promise<ActionResult> {
   return runAction("auth.requestPasswordReset", async () => {
     const parsed = parseInput(forgotPasswordSchema, input);
     if (!parsed.ok) return parsed.result;
@@ -97,7 +96,10 @@ export async function requestPasswordResetAction(
     });
     if (user?.hashedPassword) {
       const token = await createPasswordResetToken(user.id);
-      await sendPasswordResetEmail(parsed.data.email, absoluteUrl(`/reset-password?token=${token}`));
+      await sendPasswordResetEmail(
+        parsed.data.email,
+        absoluteUrl(`/reset-password?token=${token}`),
+      );
     }
     // Always report success.
     return ok(undefined);

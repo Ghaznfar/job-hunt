@@ -10,10 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import {
-  generateTailoringAction,
-  applyTailoringAction,
-} from "@/features/tailoring/actions";
+import { generateTailoringAction, applyTailoringAction } from "@/features/tailoring/actions";
 import type { TailoringPreview } from "@/services/tailoring.service";
 
 export function TailorWorkbench({
@@ -70,19 +67,25 @@ export function TailorWorkbench({
     return (
       <Card>
         <CardContent className="flex flex-col items-center gap-4 p-10 text-center">
-          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="bg-primary/10 text-primary flex size-12 items-center justify-center rounded-full">
             <Sparkles className="size-6" />
           </div>
           <div>
-            <p className="font-medium">Tailor &ldquo;{resumeName}&rdquo; for {jobTitle}</p>
-            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+            <p className="font-medium">
+              Tailor &ldquo;{resumeName}&rdquo; for {jobTitle}
+            </p>
+            <p className="text-muted-foreground mt-1 max-w-md text-sm">
               We&apos;ll suggest wording and emphasis changes as a reviewable diff. Nothing is
-              changed until you approve it, and it will never add experience or skills you don&apos;t
-              have.
+              changed until you approve it, and it will never add experience or skills you
+              don&apos;t have.
             </p>
           </div>
           <Button onClick={generate} disabled={genPending}>
-            {genPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+            {genPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Sparkles className="size-4" />
+            )}
             {genPending ? "Analyzing your CV…" : "Generate suggestions"}
           </Button>
         </CardContent>
@@ -92,7 +95,7 @@ export function TailorWorkbench({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border bg-muted/30 p-4 text-sm">
+      <div className="bg-muted/30 rounded-lg border p-4 text-sm">
         <p>{preview.overallNote}</p>
         {preview.skillsToHighlight.length ? (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -108,7 +111,7 @@ export function TailorWorkbench({
 
       {preview.changes.length === 0 ? (
         <Card>
-          <CardContent className="p-6 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground p-6 text-sm">
             No wording changes suggested — your CV already reads well for this role.
           </CardContent>
         </Card>
@@ -139,23 +142,27 @@ export function TailorWorkbench({
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
-                  <p className="mb-1 text-xs font-medium uppercase text-muted-foreground">Original</p>
+                <div className="border-destructive/30 bg-destructive/5 rounded-md border p-3 text-sm">
+                  <p className="text-muted-foreground mb-1 text-xs font-medium uppercase">
+                    Original
+                  </p>
                   {c.original}
                 </div>
-                <div className="rounded-md border border-success/30 bg-success/5 p-3 text-sm">
-                  <p className="mb-1 text-xs font-medium uppercase text-muted-foreground">Improved</p>
+                <div className="border-success/30 bg-success/5 rounded-md border p-3 text-sm">
+                  <p className="text-muted-foreground mb-1 text-xs font-medium uppercase">
+                    Improved
+                  </p>
                   {c.improved}
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 <span className="font-medium">Why:</span> {c.reason}
               </p>
               {c.flagged ? (
-                <p className="text-xs text-warning">
-                  <span className="font-medium">Flagged:</span> {c.flagReason} Unchecked by default —
-                  only keep it if it&apos;s accurate.
+                <p className="text-warning text-xs">
+                  <span className="font-medium">Flagged:</span> {c.flagReason} Unchecked by default
+                  — only keep it if it&apos;s accurate.
                 </p>
               ) : null}
             </CardContent>
@@ -168,7 +175,11 @@ export function TailorWorkbench({
           <Link href={`/dashboard/jobs/${jobId}`}>Cancel</Link>
         </Button>
         <Button onClick={apply} disabled={applyPending || accepted.size === 0}>
-          {applyPending ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
+          {applyPending ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Check className="size-4" />
+          )}
           Apply {accepted.size} change{accepted.size === 1 ? "" : "s"} as new version
         </Button>
       </div>

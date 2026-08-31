@@ -57,7 +57,7 @@ export default async function CoverLettersPage({
         />
       ) : (
         <>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {usage.remaining} of {usage.limit} AI generations left this month.
           </p>
           <CoverLetterComposer jobs={relevantJobs} initialJobId={job} />

@@ -32,18 +32,12 @@ async function loadContext(userId: string, jobId: string) {
 
   const version = defaultResume?.versions[0] ?? null;
   const structured = version ? versionToStructured(version) : null;
-  const skills = new Set<string>([
-    ...(structured?.skills ?? []),
-  ]);
+  const skills = new Set<string>([...(structured?.skills ?? [])]);
 
   return { job, profile, structured, version, skills: [...skills] };
 }
 
-export async function generateCoverLetter(
-  userId: string,
-  jobId: string,
-  tone: CoverLetterTone,
-) {
+export async function generateCoverLetter(userId: string, jobId: string, tone: CoverLetterTone) {
   await consumeUsage(userId, "COVER_LETTER");
   const { job, profile, structured, version, skills } = await loadContext(userId, jobId);
 
