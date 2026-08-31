@@ -214,6 +214,15 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             {application ? `Tracked · ${application.status}` : "Track application"}
           </Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link href={`/dashboard/resumes/tailor/${job.id}`}>Tailor CV</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href={`/dashboard/cover-letters?job=${job.id}`}>Cover letter</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href={`/dashboard/interviews/${job.id}`}>Interview prep</Link>
+        </Button>
       </div>
     </div>
   );
