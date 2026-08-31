@@ -1,0 +1,92 @@
+# Production compose for a single small VM (AWS EC2 t3.micro, free tier).
+#
+#   - db      : PostgreSQL in a container with a named volume (no RDS needed)
+#   - app     : the pre-built image pulled from a registry (GHCR); runs
+#               `prisma migrate deploy` then the standalone server
+#   - caddy   : reverse proxy + automatic Let's Encrypt HTTPS
+#
+# Usage on the VM:
+#   cp .env.prod.example .env.prod  &&  edit it
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+#
+# The image is built and pushed by CI (.github/workflows/deploy.yml) — nothing
+# is compiled on the VM, so 1 GB RAM is enough.
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-jobhunt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-jobhunt}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jobhunt}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Not published to the host — only the app container reaches it.
+
+  app:
+    image: ${APP_IMAGE:?set APP_IMAGE e.g. ghcr.io/you/jobhunt:latest}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?set APP_URL e.g. https://jobhunt.example}
+      AUTH_URL: ${APP_URL}
+      AUTH_TRUST_HOST: "true"
+      AUTH_SECRET: ${AUTH_SECRET:?generate with: openssl rand -base64 32}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-jobhunt}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-jobhunt}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-jobhunt}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-jobhunt}?schema=public
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      # --- providers (all optional; default to mock/local/console) ---
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      JOB_PROVIDERS: ${JOB_PROVIDERS:-mock}
+      ADZUNA_APP_ID: ${ADZUNA_APP_ID:-}
+      ADZUNA_APP_KEY: ${ADZUNA_APP_KEY:-}
+      CRON_SECRET: ${CRON_SECRET:?set CRON_SECRET}
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-s3}
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+      RATELIMIT_DRIVER: ${RATELIMIT_DRIVER:-postgres}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+      STRIPE_PRO_PRICE_ID: ${STRIPE_PRO_PRICE_ID:-}
+      STRIPE_PORTAL_RETURN_URL: ${APP_URL}/dashboard/settings/billing
+      EMAIL_DRIVER: ${EMAIL_DRIVER:-console}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      EMAIL_FROM: ${EMAIL_FROM:-JobHunt <noreply@localhost>}
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set APP_DOMAIN e.g. jobhunt.example}
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:

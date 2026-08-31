@@ -1,0 +1,57 @@
+name: Deploy
+
+# Manual (or on a version tag). Builds the image in CI — never on the VM — and
+# pushes to GHCR, then SSHes into the EC2 box to pull + migrate + restart.
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: meta
+        run: echo "tag=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ steps.meta.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}          # EC2 Elastic IP / DNS
+          username: ${{ secrets.DEPLOY_USER }}      # ec2-user
+          key: ${{ secrets.DEPLOY_SSH_KEY }}        # private key, added as a repo secret
+          script: |
+            set -e
+            cd ~/jobhunt
+            # keep .env.prod's APP_IMAGE pointing at :latest, or pin the sha:
+            sed -i "s#^APP_IMAGE=.*#APP_IMAGE=${{ env.IMAGE }}:${{ needs.build.outputs.tag }}#" .env.prod
+            bash deploy.sh

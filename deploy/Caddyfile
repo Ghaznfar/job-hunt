@@ -1,0 +1,20 @@
+# Automatic HTTPS via Let's Encrypt. Set APP_DOMAIN in .env.prod.
+{$APP_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+
+	# Stripe webhooks need the raw body — Caddy passes it through unchanged.
+	@webhook path /api/stripe/webhook
+	reverse_proxy @webhook app:3000
+
+	header {
+		# HSTS is also set by the app; harmless to reinforce at the edge.
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		-Server
+	}
+}
+
+# Redirect the apex/www if you point both at this box (optional):
+# www.{$APP_DOMAIN} {
+# 	redir https://{$APP_DOMAIN}{uri} permanent
+# }
