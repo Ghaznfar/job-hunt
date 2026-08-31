@@ -9,10 +9,17 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
  * `.env`, and `.env` points at the *dev* database — running deleteMany() against
  * it would wipe local data. Parsing here guarantees the test DB is used.
  */
+const TEST_ENV_DEFAULTS: Record<string, string> = {
+  DATABASE_URL: "postgresql://jobhunt:jobhunt@127.0.0.1:5432/jobhunt_test?schema=public",
+  DIRECT_URL: "postgresql://jobhunt:jobhunt@127.0.0.1:5432/jobhunt_test?schema=public",
+  AUTH_SECRET: "test-only-secret-test-only-secret-test-only-1",
+  APP_URL: "http://localhost:3000",
+};
+
 function loadTestEnv(): Record<string, string> {
   const file = r("./.env.test");
-  if (!existsSync(file)) return {};
-  const out: Record<string, string> = {};
+  if (!existsSync(file)) return { ...TEST_ENV_DEFAULTS };
+  const out: Record<string, string> = { ...TEST_ENV_DEFAULTS };
   for (const line of readFileSync(file, "utf8").split("\n")) {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/i);
     if (!m) continue;
