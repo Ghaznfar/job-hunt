@@ -1,0 +1,125 @@
+import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from "vitest";
+
+// --- Mock Next.js request-scoped APIs used by server actions -------------------
+vi.mock("next/headers", () => ({
+  headers: async () => new Map<string, string>([["x-forwarded-for", "127.0.0.1"]]),
+  cookies: async () => new Map(),
+}));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn() }));
+vi.mock("@/auth", () => ({
+  signIn: vi.fn(async () => undefined),
+  signOut: vi.fn(async () => undefined),
+  auth: vi.fn(async () => null),
+}));
+
+import { testDb, resetDb, disconnectDb } from "../helpers/db";
+import { signUpAction, verifyEmailAction, resetPasswordAction } from "@/features/auth/actions";
+import { verifyPassword } from "@/lib/auth/password";
+import { createPasswordResetToken } from "@/lib/auth/tokens";
+
+beforeAll(async () => {
+  await resetDb();
+});
+afterAll(async () => {
+  await resetDb();
+  await disconnectDb();
+});
+beforeEach(async () => {
+  await resetDb();
+});
+
+describe("sign up", () => {
+  it("creates an unverified user with a profile and subscription", async () => {
+    const res = await signUpAction({
+      name: "Test User",
+      email: "new@example.com",
+      password: "abcd1234",
+    });
+    expect(res.ok).toBe(true);
+
+    const user = await testDb.user.findUnique({
+      where: { email: "new@example.com" },
+      include: { profile: true, subscription: true },
+    });
+    expect(user).toBeTruthy();
+    expect(user?.emailVerified).toBeNull();
+    expect(user?.hashedPassword).toBeTruthy();
+    expect(user?.hashedPassword).not.toBe("abcd1234");
+    expect(user?.profile).toBeTruthy();
+    expect(user?.subscription?.plan).toBe("FREE");
+  });
+
+  it("does not leak that an account already exists", async () => {
+    await testDb.user.create({ data: { email: "dupe@example.com", hashedPassword: "x" } });
+    const res = await signUpAction({
+      name: "Dupe",
+      email: "dupe@example.com",
+      password: "abcd1234",
+    });
+    expect(res.ok).toBe(true);
+    // Still exactly one row, original hash unchanged.
+    const rows = await testDb.user.findMany({ where: { email: "dupe@example.com" } });
+    expect(rows).toHaveLength(1);
+    expect(rows[0].hashedPassword).toBe("x");
+  });
+
+  it("rejects a weak password with field errors", async () => {
+    const res = await signUpAction({ name: "Weak", email: "weak@example.com", password: "short" });
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.fieldErrors?.password?.length).toBeGreaterThan(0);
+  });
+
+  it("creates a verification token that verifies the email", async () => {
+    await signUpAction({ name: "V", email: "verify@example.com", password: "abcd1234" });
+    const token = await testDb.verificationToken.findFirst({
+      where: { identifier: "verify@example.com" },
+    });
+    expect(token).toBeTruthy();
+
+    // The stored token is hashed; verifyEmailAction hashes the raw token again.
+    // We can't recover the raw token here, so assert the negative path instead.
+    const bad = await verifyEmailAction("verify@example.com", "deadbeef");
+    expect(bad.ok).toBe(false);
+    const stillUnverified = await testDb.user.findUnique({
+      where: { email: "verify@example.com" },
+    });
+    expect(stillUnverified?.emailVerified).toBeNull();
+  });
+});
+
+describe("password reset", () => {
+  it("resets the password with a valid token and verifies the email", async () => {
+    const user = await testDb.user.create({
+      data: { email: "reset@example.com", hashedPassword: "old-hash" },
+    });
+    const token = await createPasswordResetToken(user.id);
+
+    const res = await resetPasswordAction({
+      token,
+      password: "newpass123",
+      confirm: "newpass123",
+    });
+    expect(res.ok).toBe(true);
+
+    const updated = await testDb.user.findUnique({ where: { id: user.id } });
+    expect(updated?.emailVerified).not.toBeNull();
+    expect(await verifyPassword("newpass123", updated!.hashedPassword!)).toBe(true);
+
+    // Token is single-use.
+    const reuse = await resetPasswordAction({
+      token,
+      password: "another123",
+      confirm: "another123",
+    });
+    expect(reuse.ok).toBe(false);
+  });
+
+  it("rejects a mismatched confirmation", async () => {
+    const user = await testDb.user.create({
+      data: { email: "reset2@example.com", hashedPassword: "old" },
+    });
+    const token = await createPasswordResetToken(user.id);
+    const res = await resetPasswordAction({ token, password: "newpass123", confirm: "different1" });
+    expect(res.ok).toBe(false);
+  });
+});

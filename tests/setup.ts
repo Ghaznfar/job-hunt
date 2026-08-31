@@ -6,3 +6,4 @@
 process.env.AI_PROVIDER = "mock";
 process.env.JOB_PROVIDERS = "mock";
 process.env.RATELIMIT_DRIVER = process.env.RATELIMIT_DRIVER || "memory";
+process.env.LOG_LEVEL = process.env.TEST_LOG_LEVEL || "silent";

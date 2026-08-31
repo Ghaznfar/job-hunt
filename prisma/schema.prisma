@@ -735,6 +735,14 @@ model AuditLog {
   @@index([actorId])
 }
 
+model RateLimit {
+  key       String   @id
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
 enum LogLevel {
   DEBUG
   INFO

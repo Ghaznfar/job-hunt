@@ -1,0 +1,21 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { isGoogleAuthConfigured } from "@/lib/env";
+import { SignupForm } from "@/features/auth/components/signup-form";
+
+export const metadata: Metadata = {
+  title: "Sign up",
+  description: "Create a free JobHunt account and find the tech jobs worth applying to.",
+};
+
+export default async function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const session = await auth();
+  if (session?.user) redirect("/dashboard");
+  const { next } = await searchParams;
+  return <SignupForm next={next} googleEnabled={isGoogleAuthConfigured} />;
+}

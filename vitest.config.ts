@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": r("./src"),
+      "server-only": r("./tests/stubs/server-only.ts"),
     },
   },
   // Prevent Vite from picking up the Tailwind v4 postcss config during tests.
