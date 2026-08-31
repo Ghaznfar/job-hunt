@@ -10,13 +10,18 @@ import { OpenAIProvider } from "./openai";
 export * from "./provider";
 export * from "./types";
 
-// Rough $/1M tokens for cost estimation (input+output blended, cents per 1k tokens).
+// Cost estimation, in cents per 1,000 tokens. Keep in sync with provider pricing.
+// (Claude Sonnet 5 = $2 / $10 per 1M tokens => 0.2 / 1.0 cents per 1k.)
 const COST_PER_1K_CENTS: Record<string, { in: number; out: number }> = {
-  "claude-sonnet-5": { in: 0.3, out: 1.5 },
+  "claude-sonnet-5": { in: 0.2, out: 1.0 },
+  "claude-opus-5": { in: 0.5, out: 2.5 },
+  "claude-haiku-4-5": { in: 0.1, out: 0.5 },
   "gpt-4o-mini": { in: 0.015, out: 0.06 },
   "mock-1": { in: 0, out: 0 },
 };
 
+// `AIRequest.costCents` is an integer column; individual small calls may round to
+// 0, but the monthly aggregate in the admin dashboard is accurate at volume.
 function estimateCostCents(model: string, promptTokens = 0, completionTokens = 0): number {
   const rate = COST_PER_1K_CENTS[model] ?? { in: 0.1, out: 0.3 };
   return Math.round((promptTokens / 1000) * rate.in + (completionTokens / 1000) * rate.out);
