@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
 import { ActionResult, ok, fail, parseInput, runAction } from "@/lib/action";
+import { guardUserRate } from "@/lib/rate-guard";
 import {
   generateInterviewQuestions,
   submitInterviewAnswer,
@@ -15,6 +16,7 @@ export async function generateInterviewQuestionsAction(
 ): Promise<ActionResult<{ count: number }>> {
   return runAction("interview.generate", async () => {
     const user = await requireUser();
+    await guardUserRate(user.id, "interview");
     const job = await prisma.job.findUnique({ where: { id: jobId }, select: { id: true } });
     if (!job) return fail("Job not found.");
     const questions = await generateInterviewQuestions(user.id, jobId);
@@ -36,6 +38,7 @@ export async function submitInterviewAnswerAction(
     const user = await requireUser();
     const parsed = parseInput(answerSchema, input);
     if (!parsed.ok) return parsed.result;
+    await guardUserRate(user.id, "interview-answer");
     const updated = await submitInterviewAnswer(user.id, parsed.data.questionId, parsed.data.answer);
     revalidatePath(`/dashboard/interviews/${updated.jobId}`);
     return ok({

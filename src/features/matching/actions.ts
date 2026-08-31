@@ -5,12 +5,14 @@ import { requireOnboardedUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
 import { ActionResult, ok, fail, runAction } from "@/lib/action";
 import { analyzeMatch } from "@/services/matching.service";
+import { guardUserRate } from "@/lib/rate-guard";
 
 export async function analyzeMatchAction(
   jobId: string,
 ): Promise<ActionResult<{ jobId: string; verdict: string }>> {
   return runAction("matching.analyze", async () => {
     const user = await requireOnboardedUser();
+    await guardUserRate(user.id, "match");
 
     const hasResume = await prisma.resume.count({ where: { userId: user.id } });
     if (hasResume === 0) {

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CookieConsent } from "@/components/common/cookie-consent";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}>
         <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
         <Toaster position="top-right" richColors closeButton />
+        <CookieConsent />
       </body>
     </html>
   );

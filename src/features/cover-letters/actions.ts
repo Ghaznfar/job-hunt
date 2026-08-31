@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
 import { ActionResult, ok, fail, parseInput, runAction } from "@/lib/action";
+import { guardUserRate } from "@/lib/rate-guard";
 import {
   generateCoverLetter,
   updateCoverLetter,
@@ -26,6 +27,7 @@ export async function generateCoverLetterAction(
     const user = await requireUser();
     const parsed = parseInput(generateSchema, input);
     if (!parsed.ok) return parsed.result;
+    await guardUserRate(user.id, "cover-letter");
 
     const hasResume = await prisma.resume.count({ where: { userId: user.id } });
     if (hasResume === 0) return fail("Add a CV first so the letter can reference your background.");

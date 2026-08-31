@@ -5,6 +5,7 @@ import { z } from "zod";
 import { requireUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
 import { ActionResult, ok, fail, runAction } from "@/lib/action";
+import { guardUserRate } from "@/lib/rate-guard";
 import {
   generateTailoring,
   applyTailoring,
@@ -17,6 +18,7 @@ export async function generateTailoringAction(
 ): Promise<ActionResult<TailoringPreview>> {
   return runAction("tailoring.generate", async () => {
     const user = await requireUser();
+    await guardUserRate(user.id, "tailor");
     let targetResumeId = resumeId;
     if (!targetResumeId) {
       const def = await prisma.resume.findFirst({
