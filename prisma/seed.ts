@@ -86,11 +86,20 @@ async function seedUsers() {
   console.log(`  ✓ users: ${admin.email} (ADMIN, pw: password123), ${demo.email} (FREE, pw: password123)`);
 }
 
+async function seedJobs() {
+  const { runIngestion } = await import("../src/services/ingestion.service");
+  const results = await runIngestion({ limitPerProvider: 200 });
+  for (const r of results) {
+    console.log(`  ✓ ${r.provider}: ${r.created} new, ${r.updated} updated, ${r.duplicates} dup`);
+  }
+}
+
 async function main() {
   console.log("Seeding database…");
   await seedSkills();
   await seedJobSources();
   await seedUsers();
+  await seedJobs();
   console.log("Done.");
 }
 
