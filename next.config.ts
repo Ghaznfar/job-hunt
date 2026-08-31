@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
-  serverExternalPackages: ["@prisma/client", "pino", "pino-pretty"],
+  serverExternalPackages: ["@prisma/client", "pino", "pino-pretty", "unpdf", "mammoth"],
   experimental: {
     // Server Actions body size for CV uploads (bytes handled via route, this is a guard).
     serverActions: { bodySizeLimit: "10mb" },

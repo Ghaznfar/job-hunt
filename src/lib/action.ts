@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { logger } from "@/lib/logger";
 import { RateLimitError } from "@/lib/ratelimit";
+import { UsageLimitError, FeatureLockedError } from "@/services/usage.service";
+import { UploadValidationError } from "@/lib/cv/parse";
 
 /** Discriminated result returned by every server action. */
 export type ActionResult<T = void> =
@@ -42,6 +44,17 @@ export async function runAction<T>(
   } catch (err) {
     if (err instanceof RateLimitError) {
       return fail("You're doing that too often. Please wait a moment and try again.");
+    }
+    if (err instanceof FeatureLockedError) {
+      return fail("This feature is available on the Pro plan. Upgrade in Settings → Billing.");
+    }
+    if (err instanceof UsageLimitError) {
+      return fail(
+        `You've reached your monthly limit for this feature (${err.limit}). It resets on the 1st, or upgrade to Pro for more.`,
+      );
+    }
+    if (err instanceof UploadValidationError) {
+      return fail(err.message);
     }
     // `redirect()` throws a special error that must propagate.
     if (err && typeof err === "object" && "digest" in err && String((err as { digest: string }).digest).startsWith("NEXT_REDIRECT")) {
