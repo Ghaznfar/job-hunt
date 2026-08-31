@@ -22,6 +22,7 @@ import { formatSalaryRange, relativeDate } from "@/lib/utils";
 import { ARRANGEMENT_LABEL, COUNTRY_LABEL, seniorityLabel, experienceLabel } from "@/features/jobs/format";
 import { SaveButton } from "@/features/jobs/components/save-button";
 import { VerdictBadge } from "@/features/jobs/components/verdict-badge";
+import { AnalyzeButton } from "@/features/matching/components/analyze-button";
 
 export async function generateMetadata({
   params,
@@ -118,9 +119,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
                 Run a match analysis to score this role against your profile and CV, and get a clear
                 verdict.
               </p>
-              <Button asChild size="sm">
-                <Link href={`/dashboard/match/${job.id}`}>Analyze this job</Link>
-              </Button>
+              <AnalyzeButton jobId={job.id} size="sm" />
             </div>
           )}
         </CardContent>

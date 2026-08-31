@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, FileText, Search, TrendingUp } from "lucide-react";
 import { requireUser } from "@/lib/auth/guards";
 import { prisma } from "@/lib/db";
+import { getDashboardData } from "@/services/dashboard.service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/common/empty-state";
-import { ArrowRight, FileText, Search } from "lucide-react";
+import { VerdictBadge } from "@/features/jobs/components/verdict-badge";
 
 export const metadata: Metadata = { title: "Overview" };
 
@@ -18,18 +22,10 @@ function greeting() {
 
 export default async function OverviewPage() {
   const user = await requireUser();
-  const profile = await prisma.profile.findUnique({
-    where: { userId: user.id },
-    select: { onboardingCompletedAt: true },
-  });
-
-  const [resumeCount, savedCount, applicationCount, skillCount] = await Promise.all([
+  const [data, resumeCount] = await Promise.all([
+    getDashboardData(user.id),
     prisma.resume.count({ where: { userId: user.id } }),
-    prisma.savedJob.count({ where: { userId: user.id } }),
-    prisma.application.count({ where: { userId: user.id } }),
-    prisma.userSkill.count({ where: { userId: user.id } }),
   ]);
-
   const firstName = user.name?.split(" ")[0] ?? "there";
 
   return (
@@ -41,13 +37,13 @@ export default async function OverviewPage() {
         <p className="text-muted-foreground">Here&apos;s where your job hunt stands.</p>
       </div>
 
-      {!profile?.onboardingCompletedAt ? (
+      {!data.onboarded ? (
         <Card className="border-primary/40 bg-primary/5">
           <CardContent className="flex flex-col items-start gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-medium">Finish setting up your profile</p>
               <p className="text-sm text-muted-foreground">
-                It takes two minutes and unlocks accurate job matching.
+                Two minutes, and it unlocks accurate job matching.
               </p>
             </div>
             <Button asChild>
@@ -61,10 +57,13 @@ export default async function OverviewPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "CVs", value: resumeCount },
-          { label: "Saved jobs", value: savedCount },
-          { label: "Applications", value: applicationCount },
-          { label: "Skills on profile", value: skillCount },
+          { label: "Applications", value: data.stats.applications },
+          { label: "Interviews", value: data.stats.interviews },
+          { label: "Saved jobs", value: data.stats.savedJobs },
+          {
+            label: "Avg. match",
+            value: data.stats.avgMatch != null ? `${data.stats.avgMatch}%` : "—",
+          },
         ].map((s) => (
           <Card key={s.label}>
             <CardHeader className="pb-2">
@@ -77,48 +76,101 @@ export default async function OverviewPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Next step</CardTitle>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle>Recommended jobs</CardTitle>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/dashboard/jobs">Browse all</Link>
+            </Button>
           </CardHeader>
           <CardContent>
             {resumeCount === 0 ? (
               <EmptyState
                 icon={FileText}
-                title="Upload your CV"
-                description="Parsing your CV lets JobHunt match you against real job requirements."
+                title="Upload your CV to get recommendations"
+                description="Matching needs your real experience and skills."
                 action={
                   <Button asChild>
                     <Link href="/dashboard/resumes">Upload CV</Link>
                   </Button>
                 }
               />
-            ) : (
+            ) : data.recommended.length === 0 ? (
               <EmptyState
                 icon={Search}
-                title="Find jobs worth applying to"
-                description="Search live roles and get a match score and an Apply / Maybe / Don't Apply verdict."
+                title="No recommendations yet"
+                description="Analyze a few jobs and your best matches will appear here."
                 action={
                   <Button asChild>
-                    <Link href="/dashboard/jobs">Search jobs</Link>
+                    <Link href="/dashboard/jobs">Find jobs</Link>
                   </Button>
                 }
               />
+            ) : (
+              <ul className="divide-y">
+                {data.recommended.map((r) => (
+                  <li key={r.jobId} className="flex items-center justify-between py-3">
+                    <div className="min-w-0">
+                      <Link
+                        href={`/dashboard/match/${r.jobId}`}
+                        className="font-medium hover:underline"
+                      >
+                        {r.title}
+                      </Link>
+                      <p className="text-sm text-muted-foreground">{r.company}</p>
+                    </div>
+                    {r.verdict ? (
+                      <VerdictBadge verdict={r.verdict} score={r.score} />
+                    ) : (
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/dashboard/match/${r.jobId}`}>Analyze</Link>
+                      </Button>
+                    )}
+                  </li>
+                ))}
+              </ul>
             )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Recommended jobs</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="size-4" /> Skill gaps
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <EmptyState
-              icon={Search}
-              title="No recommendations yet"
-              description="Once you've set target roles and uploaded a CV, your best matches show up here."
-            />
+            {data.skillGap.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Set target roles in your profile to see the skills most in demand.
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {data.skillGap.map((s) => (
+                  <li key={s.name}>
+                    <div className="mb-1 flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-2">
+                        {s.name}
+                        {s.have ? (
+                          <Badge variant="success" className="text-[10px]">
+                            have
+                          </Badge>
+                        ) : null}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{s.count} roles</span>
+                    </div>
+                    <Progress
+                      value={Math.min(100, (s.count / (data.skillGap[0]?.count || 1)) * 100)}
+                      indicatorClassName={s.have ? "bg-success" : "bg-primary"}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Button asChild variant="ghost" size="sm" className="mt-4 w-full">
+              <Link href="/dashboard/skill-gaps">Full analysis</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
