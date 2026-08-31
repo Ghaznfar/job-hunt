@@ -230,7 +230,7 @@ export function MatchAnalysis({ view }: { view: MatchView }) {
               <Link href={`/dashboard/cover-letters?job=${view.jobId}`}>Cover letter</Link>
             </Button>
             <Button asChild size="sm">
-              <Link href={`/dashboard/resumes?tailor=${view.jobId}`}>
+              <Link href={`/dashboard/resumes/tailor/${view.jobId}`}>
                 Tailor CV <ArrowRight className="size-4" />
               </Link>
             </Button>
