@@ -1,0 +1,27 @@
+# Requires: an ingress controller (ingress-nginx) + cert-manager with a
+# ClusterIssuer named `letsencrypt-prod`. On bare metal, expose the controller
+# with hostNetwork on a node, MetalLB, or a NodePort behind your own LB.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobhunt-app
+  namespace: jobhunt
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m" # CV uploads (MAX_UPLOAD_MB=8)
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [jobhunt.plutusai.info]
+      secretName: jobhunt-tls
+  rules:
+    - host: jobhunt.plutusai.info
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jobhunt-app
+                port: { number: 80 }

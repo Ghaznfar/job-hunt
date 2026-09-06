@@ -53,3 +53,5 @@ next-env.d.ts
 
 # k8s local secret (copy of secret.example.yaml)
 deploy/k8s/secret.yaml
+
+deploy/k8s/overlays/*/secret.env

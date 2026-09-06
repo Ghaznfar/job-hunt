@@ -20,15 +20,12 @@ data:
   # Jobs: "mock" ships 64 demo roles. Add "adzuna" + keys (secret) for the live API.
   JOB_PROVIDERS: "mock"
 
-  # CV storage — S3-compatible. Points at the in-cluster MinIO, exposed on its own
-  # subdomain so browser-facing presigned URLs resolve. If you use an external
-  # bucket (Cloudflare R2 / AWS S3 / Backblaze B2) instead, set S3_ENDPOINT to its
-  # public URL and adjust S3_FORCE_PATH_STYLE per that provider (R2: false).
-  STORAGE_DRIVER: "s3"
-  S3_ENDPOINT: "https://minio.plutusai.info"
-  S3_REGION: "us-east-1"
-  S3_BUCKET: "jobhunt-cv"
-  S3_FORCE_PATH_STYLE: "true"
+  # CV storage. Default = "local" on a volume mounted at /data (see app.yaml).
+  # For durable/shared storage, apply the minio component OR point these at an
+  # external S3-compatible bucket (Cloudflare R2 / AWS S3 / Backblaze B2):
+  #   STORAGE_DRIVER: "s3", S3_ENDPOINT, S3_BUCKET, S3_REGION, S3_FORCE_PATH_STYLE
+  STORAGE_DRIVER: "local"
+  LOCAL_STORAGE_DIR: "/data/uploads"
   MAX_UPLOAD_MB: "8"
 
   RATELIMIT_DRIVER: "postgres"

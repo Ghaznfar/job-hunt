@@ -1,0 +1,21 @@
+# Optional component: adds in-cluster S3-compatible storage (MinIO) for CV uploads
+# plus a nightly pg_dump-to-bucket backup, and flips the app to the S3 driver.
+#
+# Enable by adding to an overlay's kustomization.yaml:
+#   components:
+#     - ../../components/minio
+# and set MINIO ingress host + S3_ENDPOINT to a browser-reachable URL.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+resources:
+  - minio.yaml
+  - cronjob-backup.yaml
+
+patches:
+  - target: { kind: ConfigMap, name: jobhunt-config }
+    patch: |-
+      - { op: replace, path: /data/STORAGE_DRIVER, value: "s3" }
+      - { op: add, path: /data/S3_REGION, value: "us-east-1" }
+      - { op: add, path: /data/S3_BUCKET, value: "jobhunt-cv" }
+      - { op: add, path: /data/S3_FORCE_PATH_STYLE, value: "true" }

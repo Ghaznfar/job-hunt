@@ -1,0 +1,36 @@
+# Deployment overlay for the self-managed "voxtrace" cluster
+# (1 control-plane + 2 workers, 10Gi nodes, flannel CNI).
+#
+# Ingress:  jobhunt.plutusai.info  ->  ingress-nginx (hostNetwork on the
+#           control-plane node, 35.173.109.185) -> jobhunt-app
+# Storage:  local PVC (base) — object storage deferred to keep the image/disk small
+# Image:    ghcr.io/ghaznfar/job-hunt:latest (pulled from GHCR)
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jobhunt
+
+resources:
+  - ../../base
+
+secretGenerator:
+  - name: jobhunt-secret
+    envs:
+      - secret.env
+    options:
+      disableNameSuffixHash: true
+
+images:
+  - name: ghcr.io/OWNER/ai-hunting-job-saas-mvp
+    newName: ghcr.io/ghaznfar/job-hunt
+    newTag: latest
+
+patches:
+  # Always re-pull from GHCR on rollout.
+  - target: { kind: Deployment, name: jobhunt-app }
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: Always
+      - op: add
+        path: /spec/template/spec/initContainers/0/imagePullPolicy
+        value: Always

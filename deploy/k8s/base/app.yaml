@@ -11,6 +11,20 @@ spec:
       port: 80
       targetPort: 3000
 ---
+# Local CV storage. RWO PVC → survives pod restarts but binds to one node, so the
+# Deployment runs a single replica. Scaling past 1 requires shared object storage
+# (apply the minio component, or point STORAGE_DRIVER=s3 at an external bucket).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jobhunt-uploads
+  namespace: jobhunt
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,27 +32,17 @@ metadata:
   namespace: jobhunt
   labels: { app: jobhunt-app }
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 3
   strategy:
-    type: RollingUpdate
-    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+    type: Recreate # RWO volume can't be attached to old+new pods simultaneously
   selector:
     matchLabels: { app: jobhunt-app }
   template:
     metadata:
       labels: { app: jobhunt-app }
     spec:
-      # Spread the 2 replicas across your 2 worker nodes when possible.
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels: { app: jobhunt-app }
-                topologyKey: kubernetes.io/hostname
-      # Run DB migrations once per rollout, before any app container starts.
+      # Run DB migrations once per rollout, before the app container starts.
       initContainers:
         - name: migrate
           image: ghcr.io/OWNER/ai-hunting-job-saas-mvp:latest
@@ -58,6 +62,9 @@ spec:
           envFrom:
             - configMapRef: { name: jobhunt-config }
             - secretRef: { name: jobhunt-secret }
+          volumeMounts:
+            - name: uploads
+              mountPath: /data
           readinessProbe:
             httpGet: { path: /api/health, port: 3000 }
             initialDelaySeconds: 8
@@ -69,12 +76,16 @@ spec:
             periodSeconds: 15
             failureThreshold: 3
           resources:
-            requests: { cpu: 250m, memory: 320Mi }
-            limits: { cpu: "1", memory: 640Mi }
+            requests: { cpu: 200m, memory: 300Mi }
+            limits: { cpu: "1", memory: 600Mi }
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             capabilities: { drop: ["ALL"] }
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: jobhunt-uploads
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -82,25 +93,6 @@ metadata:
   name: jobhunt-app
   namespace: jobhunt
 spec:
-  minAvailable: 1
+  maxUnavailable: 1
   selector:
     matchLabels: { app: jobhunt-app }
----
-# Optional — needs metrics-server installed.
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: jobhunt-app
-  namespace: jobhunt
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: jobhunt-app
-  minReplicas: 2
-  maxReplicas: 6
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target: { type: Utilization, averageUtilization: 70 }

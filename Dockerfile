@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# ---- Dependencies ----
+# ---- Dependencies (full, incl. dev — needed to build) ----
 FROM base AS deps
 COPY package.json package-lock.json ./
 COPY prisma ./prisma
@@ -16,24 +16,31 @@ RUN npm ci
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Dummy DATABASE_URL so `prisma generate` and the type-checked build succeed.
+# Dummy env so `prisma generate` and the type-checked build succeed.
 ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public"
 ENV AUTH_SECRET="build-time-placeholder-secret-not-used-at-runtime"
 RUN npx prisma generate && npm run build
 
-# ---- Runner ----
+# ---- Prod deps only (small: runtime + prisma CLI + tsx for the seed) ----
+FROM base AS proddeps
+COPY package.json package-lock.json ./
+COPY prisma ./prisma
+RUN npm ci --omit=dev && npm cache clean --force
+
+# ---- Runner (slim) ----
 FROM base AS runner
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
-# Full dependency tree first (needed for `prisma migrate deploy` at release time)…
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-# …then the standalone server bundle on top.
+# Next.js standalone bundles just the runtime deps it needs (~150 MB).
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Prisma schema + migrations, the generated client, and the prod-only node_modules
+# (prisma CLI + engines + tsx) used by `migrate deploy` and the one-off seed.
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=proddeps /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
 USER nextjs

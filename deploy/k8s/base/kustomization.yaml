@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jobhunt
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - app.yaml
+  - ingress.yaml
+  - cronjob-ingest.yaml
+  # The Secret is supplied by an overlay (secretGenerator) or applied manually
+  # from secret.example.yaml — see README. seed-job.yaml is a one-time manual apply.
+  # Optional: `components/minio` adds S3-compatible storage + nightly pg_dump backup.
+
+# Overridden per-environment by the overlay.
+images:
+  - name: ghcr.io/OWNER/ai-hunting-job-saas-mvp
+    newName: ghcr.io/ghaznfar/job-hunt
+    newTag: latest
