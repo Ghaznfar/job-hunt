@@ -1,0 +1,32 @@
+# Triggers job ingestion every 6 hours by calling the app's internal endpoint.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: jobhunt-ingest
+  namespace: jobhunt
+spec:
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 300
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: curl
+              image: curlimages/curl:8.11.1
+              command:
+                - sh
+                - -c
+                - 'curl -fsS --max-time 240 "http://jobhunt-app/api/cron/ingest-jobs?key=${CRON_SECRET}" && echo OK'
+              env:
+                - name: CRON_SECRET
+                  valueFrom:
+                    secretKeyRef: { name: jobhunt-secret, key: CRON_SECRET }
+              resources:
+                requests: { cpu: 20m, memory: 32Mi }
+                limits: { cpu: 100m, memory: 64Mi }

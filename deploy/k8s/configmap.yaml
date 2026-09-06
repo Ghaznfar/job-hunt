@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jobhunt-config
+  namespace: jobhunt
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  # Public URL — must match the Ingress host.
+  APP_URL: "https://jobhunt.plutusai.info"
+  AUTH_URL: "https://jobhunt.plutusai.info"
+  AUTH_TRUST_HOST: "true"
+
+  # AI: "mock" needs no key. Set to "anthropic" and add ANTHROPIC_API_KEY (secret) for real output.
+  AI_PROVIDER: "mock"
+  ANTHROPIC_MODEL: "claude-sonnet-5"
+  AI_RULE_WEIGHT: "0.7"
+  AI_AI_WEIGHT: "0.3"
+
+  # Jobs: "mock" ships 64 demo roles. Add "adzuna" + keys (secret) for the live API.
+  JOB_PROVIDERS: "mock"
+
+  # CV storage — S3-compatible. Points at the in-cluster MinIO, exposed on its own
+  # subdomain so browser-facing presigned URLs resolve. If you use an external
+  # bucket (Cloudflare R2 / AWS S3 / Backblaze B2) instead, set S3_ENDPOINT to its
+  # public URL and adjust S3_FORCE_PATH_STYLE per that provider (R2: false).
+  STORAGE_DRIVER: "s3"
+  S3_ENDPOINT: "https://minio.plutusai.info"
+  S3_REGION: "us-east-1"
+  S3_BUCKET: "jobhunt-cv"
+  S3_FORCE_PATH_STYLE: "true"
+  MAX_UPLOAD_MB: "8"
+
+  RATELIMIT_DRIVER: "postgres"
+
+  EMAIL_DRIVER: "console"
+  EMAIL_FROM: "JobHunt <noreply@plutusai.info>"
+
+  FREE_MONTHLY_JOB_MATCH: "10"
+  FREE_MONTHLY_CV_ANALYSIS: "3"
+  FREE_MONTHLY_AI_GENERATIONS: "5"
+
+  STRIPE_PORTAL_RETURN_URL: "https://jobhunt.plutusai.info/dashboard/settings/billing"

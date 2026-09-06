@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobhunt-app
+  namespace: jobhunt
+  labels: { app: jobhunt-app }
+spec:
+  selector: { app: jobhunt-app }
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobhunt-app
+  namespace: jobhunt
+  labels: { app: jobhunt-app }
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  selector:
+    matchLabels: { app: jobhunt-app }
+  template:
+    metadata:
+      labels: { app: jobhunt-app }
+    spec:
+      # Spread the 2 replicas across your 2 worker nodes when possible.
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels: { app: jobhunt-app }
+                topologyKey: kubernetes.io/hostname
+      # Run DB migrations once per rollout, before any app container starts.
+      initContainers:
+        - name: migrate
+          image: ghcr.io/OWNER/ai-hunting-job-saas-mvp:latest
+          command: ["node_modules/.bin/prisma", "migrate", "deploy"]
+          envFrom:
+            - configMapRef: { name: jobhunt-config }
+            - secretRef: { name: jobhunt-secret }
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+      containers:
+        - name: app
+          image: ghcr.io/OWNER/ai-hunting-job-saas-mvp:latest
+          command: ["node", "server.js"]
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef: { name: jobhunt-config }
+            - secretRef: { name: jobhunt-secret }
+          readinessProbe:
+            httpGet: { path: /api/health, port: 3000 }
+            initialDelaySeconds: 8
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket: { port: 3000 }
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 250m, memory: 320Mi }
+            limits: { cpu: "1", memory: 640Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities: { drop: ["ALL"] }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: jobhunt-app
+  namespace: jobhunt
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: { app: jobhunt-app }
+---
+# Optional — needs metrics-server installed.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: jobhunt-app
+  namespace: jobhunt
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: jobhunt-app
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 }

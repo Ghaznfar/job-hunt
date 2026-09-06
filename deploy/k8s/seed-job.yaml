@@ -1,0 +1,27 @@
+# Run ONCE after the first deploy to load the skill catalogue, job sources and
+# (mock) demo jobs. Idempotent — safe to re-run. Delete or skip in production if
+# you don't want the demo dataset (the skill catalogue is still needed for matching).
+#
+#   kubectl -n jobhunt apply -f seed-job.yaml
+#   kubectl -n jobhunt logs job/jobhunt-seed -f
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jobhunt-seed
+  namespace: jobhunt
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: ghcr.io/OWNER/ai-hunting-job-saas-mvp:latest
+          command: ["node_modules/.bin/tsx", "prisma/seed.ts"]
+          envFrom:
+            - configMapRef: { name: jobhunt-config }
+            - secretRef: { name: jobhunt-secret }
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: "1", memory: 512Mi }

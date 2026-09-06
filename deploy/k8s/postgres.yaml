@@ -1,0 +1,74 @@
+# Single-instance PostgreSQL for the cluster.
+#
+# Fine for an MVP. For production durability you want managed Postgres (RDS,
+# Cloud SQL, Neon) or an operator (CloudNativePG / Zalando) that does
+# replication + PITR backups. This StatefulSet has none of that — take
+# `pg_dump` backups on a schedule (see cronjob-backup.yaml).
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: jobhunt
+  labels: { app: postgres }
+spec:
+  clusterIP: None # headless — required by the StatefulSet
+  selector: { app: postgres }
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: jobhunt
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels: { app: postgres }
+  template:
+    metadata:
+      labels: { app: postgres }
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: postgres
+          image: postgres:17-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: jobhunt
+            - name: POSTGRES_DB
+              value: jobhunt
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: jobhunt-secret, key: POSTGRES_PASSWORD }
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec: { command: ["pg_isready", "-U", "jobhunt"] }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            exec: { command: ["pg_isready", "-U", "jobhunt"] }
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: "1", memory: 1Gi }
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # Uses the cluster's default StorageClass. On k3s that's local-path;
+        # otherwise set storageClassName to Longhorn / Rook-Ceph / OpenEBS.
+        resources:
+          requests:
+            storage: 10Gi
