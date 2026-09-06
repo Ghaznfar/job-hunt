@@ -42,6 +42,9 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=proddeps /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+# `src` + tsconfig so `tsx prisma/seed.ts` (which imports @/lib/*) can run in-cluster.
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/src ./src
 
 USER nextjs
 EXPOSE 3000

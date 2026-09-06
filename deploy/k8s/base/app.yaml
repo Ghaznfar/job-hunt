@@ -42,6 +42,9 @@ spec:
     metadata:
       labels: { app: jobhunt-app }
     spec:
+      # Let the non-root app user own the mounted uploads volume.
+      securityContext:
+        fsGroup: 1001
       # Run DB migrations once per rollout, before the app container starts.
       initContainers:
         - name: migrate
@@ -81,6 +84,8 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1001 # matches the `nextjs` user baked into the image
+            runAsGroup: 1001
             capabilities: { drop: ["ALL"] }
       volumes:
         - name: uploads

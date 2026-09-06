@@ -1,5 +1,65 @@
 # Kubernetes deployment (self-managed cluster: 1 control-plane + 2 workers)
 
+Layout: `base/` (portable manifests) · `overlays/<env>/` (per-cluster kustomize) ·
+`components/minio/` (optional S3-compatible storage).
+
+---
+
+## Live deployment: `overlays/voxtrace`
+
+Running at **https://jobhunt.plutusai.info** on the kubeadm cluster reachable via
+`~/.kube/voxtrace-aws-config` (control-plane `35.173.109.185`, 2 workers, flannel,
+10 GiB nodes).
+
+```bash
+export KUBECONFIG=~/.kube/voxtrace-aws-config
+
+# image (built for linux/amd64, pushed to GHCR — private, so a pull secret is used)
+docker buildx build --platform linux/amd64 --push -t ghcr.io/ghaznfar/job-hunt:latest .
+
+kubectl create ns jobhunt --dry-run=client -o yaml | kubectl apply -f -
+gh auth token | kubectl -n jobhunt create secret docker-registry ghcr \
+  --docker-server=ghcr.io --docker-username=ghaznfar --docker-password-stdin
+kubectl -n jobhunt patch serviceaccount default \
+  -p '{"imagePullSecrets":[{"name":"ghcr"}]}'
+
+cp deploy/k8s/base/secret.example.yaml deploy/k8s/overlays/voxtrace/secret.env  # convert to KEY=VAL, fill in
+kubectl apply -k deploy/k8s/overlays/voxtrace
+kubectl -n jobhunt rollout status deploy/jobhunt-app
+```
+
+**One-time cluster setup that was applied** (kubeadm ships none of this):
+
+| Component | How |
+| --- | --- |
+| ingress-nginx v1.12.1 | baremetal manifest, then `kubectl patch` the controller to `hostNetwork: true` + `dnsPolicy: ClusterFirstWithHostNet`, pinned to the control-plane node (ports 80/443 free there) with the control-plane toleration + `--publish-status-address=35.173.109.185` |
+| cert-manager v1.16.3 | upstream manifest + a `ClusterIssuer/letsencrypt-prod` (HTTP-01 via nginx) |
+| metrics-server | upstream manifest + `--kubelet-insecure-tls` |
+| AWS security group `sg-0ab989e1b1c8d101b` | added inbound `tcp/80` and `tcp/443` from `0.0.0.0/0` |
+| DNS | GoDaddy `A jobhunt.plutusai.info -> 35.173.109.185` |
+
+**Data bootstrap** (the `seed-job` needs `src/` in the image — added in the
+Dockerfile since; until that image ships, do it live):
+
+```bash
+POD=$(kubectl -n jobhunt get pod -l app=jobhunt-app -o jsonpath='{.items[0].metadata.name}')
+CRON=$(kubectl -n jobhunt get secret jobhunt-secret -o jsonpath='{.data.CRON_SECRET}' | base64 -d)
+# populates the Skill table + 64 mock jobs
+kubectl -n jobhunt exec $POD -c app -- node -e \
+  "fetch('http://localhost:3000/api/cron/ingest-jobs?key=$CRON').then(r=>r.text()).then(console.log)"
+```
+
+Seeded logins created live: `admin@jobhunt.test` (ADMIN/PRO), `demo@jobhunt.test`
+(FREE) — password `password123`.
+
+**Known trade-offs on this cluster** (10 GiB nodes, no spend):
+- Single app replica, `Recreate` strategy, CV uploads on a 2 GiB RWO PVC (not
+  shared — scaling past 1 replica needs `components/minio` or an external bucket).
+- Single-instance Postgres StatefulSet, no HA/PITR — take `pg_dump` backups.
+- No HPA (removed) — vertical headroom only.
+
+---
+
 ## What this deploys (namespace `jobhunt`)
 
 | Object | Purpose |
