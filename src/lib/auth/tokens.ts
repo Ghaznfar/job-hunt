@@ -32,15 +32,36 @@ export async function consumeEmailVerificationToken(
   email: string,
   token: string,
 ): Promise<boolean> {
+  // Look the token up on its own (it's globally unique) rather than on
+  // (identifier, token): the `email` query param in the link can be altered by
+  // mail clients (link wrapping, casing, "+" handling), and the raw token —
+  // 64 hex chars — always survives.
   const record = await prisma.verificationToken.findUnique({
-    where: { identifier_token: { identifier: email, token: hashToken(token) } },
+    where: { token: hashToken(token) },
   });
-  if (!record || record.expires < new Date()) return false;
-  await prisma.$transaction([
-    prisma.user.update({ where: { email }, data: { emailVerified: new Date() } }),
-    prisma.verificationToken.deleteMany({ where: { identifier: email } }),
-  ]);
-  return true;
+
+  if (record && record.expires >= new Date()) {
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { email: record.identifier },
+        data: { emailVerified: new Date() },
+      }),
+      prisma.verificationToken.deleteMany({ where: { identifier: record.identifier } }),
+    ]);
+    return true;
+  }
+
+  // Token missing or expired. If a link prefetcher/scanner already consumed it
+  // (or the user clicked twice), the account may already be verified — treat as success.
+  const target = (record?.identifier ?? email)?.trim().toLowerCase();
+  if (target) {
+    const user = await prisma.user.findUnique({
+      where: { email: target },
+      select: { emailVerified: true },
+    });
+    if (user?.emailVerified) return true;
+  }
+  return false;
 }
 
 // ---- Password reset --------------------------------------------------------

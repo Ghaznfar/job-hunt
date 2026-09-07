@@ -64,6 +64,11 @@ export function getMailer(): Mailer {
 
 // ---- Templated messages -------------------------------------------------------
 
+/** Escape a URL for safe interpolation into an HTML attribute (esp. the `&` in query strings). */
+function escAttr(url: string): string {
+  return url.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
 function layout(title: string, body: string): { html: string; text: string } {
   const html = `<!doctype html><html><body style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
 <h2>${title}</h2>${body}
@@ -77,7 +82,7 @@ function layout(title: string, body: string): { html: string; text: string } {
 export async function sendVerificationEmail(to: string, url: string) {
   const { html, text } = layout(
     "Confirm your email",
-    `<p>Click the link below to verify your JobHunt account:</p><p><a href="${url}">${url}</a></p>`,
+    `<p>Click the link below to verify your JobHunt account:</p><p><a href="${escAttr(url)}">${escAttr(url)}</a></p>`,
   );
   await getMailer().send({ to, subject: "Verify your JobHunt email", html, text });
 }
@@ -85,7 +90,7 @@ export async function sendVerificationEmail(to: string, url: string) {
 export async function sendPasswordResetEmail(to: string, url: string) {
   const { html, text } = layout(
     "Reset your password",
-    `<p>We received a request to reset your JobHunt password. This link expires in 1 hour:</p><p><a href="${url}">${url}</a></p><p>If you didn't request this, you can safely ignore it.</p>`,
+    `<p>We received a request to reset your JobHunt password. This link expires in 1 hour:</p><p><a href="${escAttr(url)}">${escAttr(url)}</a></p><p>If you didn't request this, you can safely ignore it.</p>`,
   );
   await getMailer().send({ to, subject: "Reset your JobHunt password", html, text });
 }

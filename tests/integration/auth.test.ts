@@ -15,7 +15,11 @@ vi.mock("@/auth", () => ({
 import { testDb, resetDb, disconnectDb } from "../helpers/db";
 import { signUpAction, verifyEmailAction, resetPasswordAction } from "@/features/auth/actions";
 import { verifyPassword } from "@/lib/auth/password";
-import { createPasswordResetToken } from "@/lib/auth/tokens";
+import {
+  createPasswordResetToken,
+  createEmailVerificationToken,
+  consumeEmailVerificationToken,
+} from "@/lib/auth/tokens";
 
 beforeAll(async () => {
   await resetDb();
@@ -76,14 +80,42 @@ describe("sign up", () => {
     });
     expect(token).toBeTruthy();
 
-    // The stored token is hashed; verifyEmailAction hashes the raw token again.
-    // We can't recover the raw token here, so assert the negative path instead.
     const bad = await verifyEmailAction("verify@example.com", "deadbeef");
     expect(bad.ok).toBe(false);
     const stillUnverified = await testDb.user.findUnique({
       where: { email: "verify@example.com" },
     });
     expect(stillUnverified?.emailVerified).toBeNull();
+  });
+
+  it("verifies with the raw token even if the email query param is wrong/mangled", async () => {
+    await testDb.user.create({ data: { email: "roundtrip@example.com", hashedPassword: "x" } });
+    const raw = await createEmailVerificationToken("roundtrip@example.com");
+
+    // Mail clients can alter the `email` param — verification must still work off the token alone.
+    const ok = await consumeEmailVerificationToken("WRONG+garbled@example.com", raw);
+    expect(ok).toBe(true);
+    const user = await testDb.user.findUnique({ where: { email: "roundtrip@example.com" } });
+    expect(user?.emailVerified).not.toBeNull();
+
+    // Row is single-use; a re-click still resolves true via the already-verified path.
+    expect(
+      await testDb.verificationToken.findMany({ where: { identifier: "roundtrip@example.com" } }),
+    ).toHaveLength(0);
+    expect(await consumeEmailVerificationToken("roundtrip@example.com", raw)).toBe(true);
+  });
+
+  it("fails for an unknown token on an unverified account", async () => {
+    await testDb.user.create({ data: { email: "nope@example.com", hashedPassword: "x" } });
+    expect(await consumeEmailVerificationToken("nope@example.com", "not-a-real-token")).toBe(false);
+  });
+
+  it("treats an already-verified account as success (link prefetch / double click)", async () => {
+    await testDb.user.create({
+      data: { email: "prefetch@example.com", hashedPassword: "x", emailVerified: new Date() },
+    });
+    // token was already consumed by a scanner; user clicks the dead link
+    expect(await consumeEmailVerificationToken("prefetch@example.com", "anything")).toBe(true);
   });
 });
 
