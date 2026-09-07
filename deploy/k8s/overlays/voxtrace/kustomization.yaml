@@ -22,7 +22,7 @@ secretGenerator:
 images:
   - name: ghcr.io/OWNER/ai-hunting-job-saas-mvp
     newName: ghcr.io/ghaznfar/job-hunt
-    newTag: latest
+    newTag: f3bfa76
 
 patches:
   # Always re-pull from GHCR on rollout.
