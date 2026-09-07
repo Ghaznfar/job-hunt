@@ -22,7 +22,8 @@ spec:
               command:
                 - sh
                 - -c
-                - 'curl -fsS --max-time 240 "http://jobhunt-app/api/cron/ingest-jobs?key=${CRON_SECRET}" && echo OK'
+                - 'curl -fsS --max-time 240 --retry 4 --retry-delay 10 --retry-connrefused
+                   "http://jobhunt-app/api/cron/ingest-jobs?key=${CRON_SECRET}" && echo OK'
               env:
                 - name: CRON_SECRET
                   valueFrom:
