@@ -30,8 +30,8 @@ data:
 
   RATELIMIT_DRIVER: "postgres"
 
-  EMAIL_DRIVER: "console"
-  EMAIL_FROM: "JobHunt <noreply@plutusai.info>"
+  EMAIL_DRIVER: "resend"
+  EMAIL_FROM: "JobHunt <noreply@send.plutusai.info>"
 
   FREE_MONTHLY_JOB_MATCH: "10"
   FREE_MONTHLY_CV_ANALYSIS: "3"
